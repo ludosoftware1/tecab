@@ -1,0 +1,3 @@
+{% load site_tags %}{% for message in messages %}{% if not tag or tag in message.tags %}<div class="alert alert--{% if message.level_tag == 'error' %}error{% else %}success{% endif %}" role="status">
+  {% if message.level_tag == 'error' %}{% icon 'alert' %}{% else %}{% icon 'check-circle' %}{% endif %}<p>{{ message }}</p>
+</div>{% endif %}{% endfor %}

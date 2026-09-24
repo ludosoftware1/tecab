@@ -1,0 +1,16 @@
+{% load site_tags %}{% comment %}
+Cabeçalho das páginas internas. Parâmetros: imagem, titulo, subtitulo, trilha (texto da página atual).
+{% endcomment %}<section class="page-hero{% if compacto %} page-hero--compact{% endif %}">
+  <div class="page-hero__media">{% picture imagem '' '100vw' '' 'eager' True %}</div>
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Você está em">
+      <ol>
+        <li><a href="{% url 'website:home' %}">Início</a></li>
+        {% if trilha_pai %}<li><a href="{{ trilha_pai_url }}">{{ trilha_pai }}</a></li>{% endif %}
+        <li aria-current="page">{{ trilha|default:titulo }}</li>
+      </ol>
+    </nav>
+    <h1>{{ titulo }}</h1>
+    {% if subtitulo %}<p>{{ subtitulo }}</p>{% endif %}
+  </div>
+</section>

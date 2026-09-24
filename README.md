@@ -1,63 +1,67 @@
-# TECAB – site em Django
+# TECAB – site institucional (Django)
 
-Reconstrução em Django do site https://tecab.srv.br/ (originalmente WordPress + tema Stal/Elementor),
-com todos os assets servidos localmente.
+Site do TECAB – Terminais de Armazenagens de Cabedelo, reconstruído em Django com layout próprio,
+mantendo a identidade visual da empresa (vermelho `#ee0d08`, grafite `#101010`, cinza-claro `#f1f3f5`, fonte Mulish).
 
 ## Executar com Docker
 
 ```bash
-cp .env.example .env        # ajuste DJANGO_SECRET_KEY e, se quiser, TECAB_PORT
+cp .env.example .env        # defina DJANGO_SECRET_KEY e, se quiser, TECAB_PORT
 docker compose up -d --build
 ```
 
-O site sobe em `http://localhost:8090` (ou na porta definida em `TECAB_PORT`).
-Banco SQLite e uploads (currículos) ficam no volume `tecab2-data`.
+O site sobe em `http://localhost:8090` (ou na porta de `TECAB_PORT`). Banco SQLite e currículos enviados
+ficam no volume `tecab2-data`.
 
-Criar um usuário administrador (para ver mensagens e candidaturas em `/admin/`):
+Criar um administrador (para ver mensagens, candidaturas e relatos em `/admin/`):
 
 ```bash
 docker compose exec web python manage.py createsuperuser
 ```
 
-## Executar localmente (desenvolvimento)
+## Desenvolvimento
 
 ```bash
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
+python manage.py test website   # suíte de testes
 ```
 
-## Estrutura
+## Onde editar o conteúdo
 
-| Caminho | Conteúdo |
+| O quê | Onde |
 |---|---|
-| `website/templates/website/base.html` | Cabeçalho, menus, rodapé e CSS/JS comuns a todas as páginas |
-| `website/templates/website/pages/` | Home, Quem Somos, Informações ANP, Área do Colaborador, Contato |
-| `website/templates/website/portfolio/` | Itens e categorias do portfólio |
-| `website/templates/website/accounts/` | Login, cadastro e recuperação de senha |
-| `website/templates/website/forms/` | Formulários "Contato" e "Trabalhe Conosco" |
-| `website/static/` | Assets baixados do site original (mesma estrutura `wp-content/`, `wp-includes/`) e fontes do Google em `fonts/google/` |
-| `website/pages.py` | Registro das páginas, IDs antigos do WordPress e itens do menu |
+| Telefones, e-mails, endereço, horários, links do Portal do Cliente | `website/content.py` → `EMPRESA` |
+| Números do terminal, modais, diferenciais, clientes, certificações, galeria, documentos ANP | `website/content.py` |
+| Textos das páginas | `website/templates/website/pages/` |
+| Cores, tipografia e componentes | `website/static/css/site.css` (variáveis no início do arquivo) |
+| Documentos (PDF/DOCX/XLSX) | `website/static/docs/` + `website/content.py` |
 
-## Rotas
+### Imagens
 
-| Nova URL | URL original |
+As imagens são servidas em WebP responsivo (várias larguras), geradas a partir dos originais:
+
+1. Coloque o original em `assets_src/` (pasta fora do repositório).
+2. Registre-o em `website/images.py` (chave, larguras e recorte).
+3. Rode `python manage.py gerar_imagens` (use `--extras` para regenerar favicons e a imagem de compartilhamento).
+4. Use no template: `{% picture 'chave' 'texto alternativo' '(max-width: 900px) 100vw, 50vw' %}`.
+
+## Páginas e funcionalidades
+
+| Rota | Conteúdo |
 |---|---|
-| `/` | `/` |
-| `/quem-somos/` | `/?page_id=2174` |
-| `/informacoes-anp/` | `/?page_id=5331` |
-| `/area-do-colaborador/` | `/?page_id=6946` |
-| `/contato/` | `/?page_id=2381` |
-| `/login/`, `/registrar/`, `/recuperar-senha/` | `/?page_id=6953`, `6954`, `6958` |
-| `/portfolio/<slug>/` | `/?portfolio-item=<slug>` |
-| `/portfolio-category/<slug>/` | `/?portfolio-category=<slug>` |
+| `/` | Apresentação, números do terminal, modais, diferenciais, certificações, clientes |
+| `/quem-somos/` | História, vídeo, missão/visão/valores, galeria, Porto de Cabedelo, política do SGI, ética |
+| `/informacoes-anp/` | Documentos da Resolução ANP 881/2022, formulários e histórico de movimentações |
+| `/contato/` | Telefones por setor, e-mails, horários, formulários "Fale conosco" e "Trabalhe conosco", mapa |
+| `/canal-de-integridade/` | Relatos anônimos (ou identificados) com número de protocolo |
+| `/area-do-colaborador/` | Área restrita: login por usuário ou e-mail, cadastro, recuperação e troca de senha |
+| `/sitemap.xml`, `/robots.txt` | SEO |
 
-Os endereços antigos (`?page_id=`, `?p=`, `?portfolio-item=`, `?portfolio-category=`) redirecionam (301) para os novos.
+Os endereços antigos do WordPress (`?page_id=`, `?p=`, `?portfolio-item=`...) redirecionam (301) para as novas rotas.
 
-## Funcionalidades
-
-- **Contato / Trabalhe Conosco**: grava no banco (visível no admin) e envia e-mail para
-  `TECAB_CONTATO_DESTINATARIOS` (o currículo vai anexado). Mantém o visual e as mensagens do Contact Form 7.
-- **Área do Colaborador**: login (por usuário ou e-mail), cadastro e recuperação de senha com a aparência do
-  Ultimate Member, usando a autenticação do Django.
-- E-mails saem no console por padrão; para SMTP configure as variáveis `DJANGO_EMAIL_*` (veja `.env.example`).
+Os formulários gravam no banco (visível no admin) e enviam e-mail para `TECAB_CONTATO_DESTINATARIOS`;
+os relatos do Canal de Integridade notificam `TECAB_INTEGRIDADE_DESTINATARIOS` **sem** incluir o conteúdo do
+relato no e-mail. Por padrão os e-mails saem no console; configure SMTP pelas variáveis `DJANGO_EMAIL_*`
+(veja `.env.example`). Em produção com HTTPS, defina `DJANGO_HTTPS=1`.

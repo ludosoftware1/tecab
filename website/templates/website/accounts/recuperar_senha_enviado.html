@@ -1,11 +1,9 @@
-{% extends "website/accounts/recuperar_senha.html" %}
-{% block um_form %}<div class="um um-password um-um_password_id">
-	<div class="um-form">
-		<div class="um-field um-field-block um-field-type_block">
-			<div class="um-field-block">
-				<div style="text-align:center;">
-					If an account matching the provided details exists, we will send a password reset link. Please check your inbox.				</div>
-			</div>
-		</div>
-	</div>
-</div>{% endblock %}
+{% extends "website/accounts/base_auth.html" %}
+{% load site_tags %}
+{% block title %}Verifique seu e-mail | Área do Colaborador | TECAB{% endblock %}
+{% block card %}
+<span class="icon-badge">{% icon 'mail' %}</span>
+<h2 class="auth__title">Verifique seu e-mail</h2>
+<p class="auth__intro">Se houver uma conta com os dados informados, você receberá em instantes um e-mail com o link para criar uma nova senha. Confira também a caixa de spam.</p>
+<a class="btn btn--block" href="{% url 'website:login' %}">Voltar para o login</a>
+{% endblock %}

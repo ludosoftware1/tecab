@@ -1,0 +1,17 @@
+{% extends "website/accounts/base_auth.html" %}
+{% load site_tags %}
+{% block title %}Alterar senha | Área do Colaborador | TECAB{% endblock %}
+{% block card %}
+<h2 class="auth__title">Alterar senha</h2>
+<p class="auth__intro">Confirme sua senha atual e escolha uma nova.</p>
+<form method="post" novalidate data-enhance>
+  {% csrf_token %}
+  <div class="stack-form">
+    {% include "website/includes/field.html" with field=form.old_password tipo='password' %}
+    {% include "website/includes/field.html" with field=form.new_password1 tipo='password' %}
+    {% include "website/includes/field.html" with field=form.new_password2 tipo='password' %}
+    <button type="submit" class="btn btn--block">Salvar nova senha</button>
+  </div>
+</form>
+<div class="auth__links"><a href="{% url 'website:area_colaborador' %}">{% icon 'arrow-left' %} Voltar</a></div>
+{% endblock %}

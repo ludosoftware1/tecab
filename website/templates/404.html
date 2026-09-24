@@ -1,0 +1,17 @@
+{% extends "website/base.html" %}
+{% load site_tags %}
+{% block title %}Página não encontrada | TECAB{% endblock %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+{% include "website/includes/page_hero.html" with imagem='banner-porto' titulo='Página não encontrada' subtitulo='O endereço pode ter mudado ou a página não existe mais.' trilha='Erro 404' %}
+<section class="section">
+  <div class="container--narrow text-center">
+    <p class="lead">Talvez você esteja procurando por uma destas páginas:</p>
+    <div class="btn-group" style="justify-content:center">
+      <a class="btn" href="{% url 'website:home' %}">Página inicial</a>
+      <a class="btn btn--outline" href="{% url 'website:informacoes_anp' %}">Informações ANP</a>
+      <a class="btn btn--outline" href="{% url 'website:contato' %}">Contato</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

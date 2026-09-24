@@ -1,0 +1,43 @@
+{% load static site_tags %}<footer class="site-footer">
+  <div class="container site-footer__top">
+    <div class="site-footer__brand">
+      <img src="{% img_url 'logo-branco' 240 %}" alt="TECAB" width="240" height="210" loading="lazy">
+      <p>{{ empresa.descricao }}</p>
+    </div>
+
+    <nav aria-labelledby="rodape-institucional">
+      <h2 id="rodape-institucional">Institucional</h2>
+      <ul>
+        {% for item in nav %}<li><a href="{{ item.url }}">{{ item.label }}</a></li>{% endfor %}
+        <li><a href="{% url 'website:contato' %}?aba=trabalhe#formularios">Trabalhe conosco</a></li>
+        <li><a href="{% url 'website:canal_integridade' %}">Canal de Integridade</a></li>
+        <li><a href="{% url 'website:area_colaborador' %}">Área do Colaborador</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h2>Fale conosco</h2>
+      <ul class="footer-contact">
+        <li>{% icon 'phone' %}<a href="tel:{{ empresa.telefone_principal.tel }}">{{ empresa.telefone_principal.numero }}</a></li>
+        {% for e in empresa.emails %}<li>{% icon 'mail' %}<a href="mailto:{{ e.email }}">{{ e.email }}</a></li>{% endfor %}
+        <li>{% icon 'message' %}<a href="{% url 'website:contato' %}">Todos os telefones</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2>Onde estamos</h2>
+      <ul class="footer-contact">
+        <li>{% icon 'pin' %}<address style="font-style:normal">{{ empresa.endereco.logradouro }}<br>{{ empresa.endereco.bairro }}, {{ empresa.endereco.cidade }} – {{ empresa.endereco.uf }}<br>CEP {{ empresa.endereco.cep }}</address></li>
+        <li>{% icon 'map' %}<a href="{{ empresa.mapa_url }}" target="_blank" rel="noopener">Como chegar<span class="visually-hidden"> (abre em nova aba)</span></a></li>
+        <li>{% icon 'clock' %}<span>Administrativo: seg. a sex., 8h às 18h</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container site-footer__bottom">
+    <p style="margin:0">© {{ ano_atual }} {{ empresa.razao_social }}. Todos os direitos reservados.</p>
+    <ul>
+      <li><a href="{% static empresa.politica_privacidade %}" target="_blank" rel="noopener">Política de Privacidade</a></li>
+      <li><a href="{% url 'website:canal_integridade' %}">Canal de Integridade</a></li>
+    </ul>
+  </div>
+</footer>

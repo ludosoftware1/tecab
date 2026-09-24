@@ -1,0 +1,41 @@
+{% load static site_tags %}<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="{% url 'website:home' %}" aria-label="TECAB – página inicial">
+      <img class="brand__light" src="{% img_url 'logo-branco' 240 %}" alt="" width="240" height="210">
+      <img class="brand__dark" src="{% img_url 'logo' 240 %}" alt="" width="240" height="210">
+      <span class="brand__text" aria-hidden="true">Terminais de Armazenagens de Cabedelo</span>
+    </a>
+
+    <nav class="main-nav" id="menu-principal" aria-label="Menu principal">
+      <ul class="main-nav__list">
+        {% for item in nav %}
+        <li><a class="main-nav__link" href="{{ item.url }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+        {% endfor %}
+      </ul>
+      <div class="header-actions">
+        <a class="header-link" href="{% url 'website:area_colaborador' %}"{% if current_url_name == 'area_colaborador' %} aria-current="page"{% endif %}>
+          {% icon 'user' %}<span>Área do Colaborador</span>
+        </a>
+        <div class="dropdown" data-dropdown>
+          <button type="button" class="btn btn--sm dropdown__toggle" aria-expanded="false" aria-controls="menu-portal">
+            {% icon 'lock' %}Portal do Cliente{% icon 'chevron-down' 'icon--chevron' %}
+          </button>
+          <ul class="dropdown__menu" id="menu-portal">
+            {% for portal in empresa.portal_cliente %}
+            <li>
+              <a href="{{ portal.url }}" target="_blank" rel="noopener">
+                {% icon 'external' %}
+                <span><strong>{{ portal.rotulo }}</strong><small>{{ portal.descricao }} · abre em nova aba</small></span>
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="menu-principal" aria-label="Abrir menu">
+      {% icon 'menu' 'icon--menu' %}{% icon 'close' 'icon--close' %}
+    </button>
+  </div>
+</header>

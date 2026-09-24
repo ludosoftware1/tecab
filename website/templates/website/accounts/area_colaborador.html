@@ -1,0 +1,24 @@
+{% extends "website/accounts/base_auth.html" %}
+{% load static site_tags %}
+{% block title %}Área do Colaborador | TECAB{% endblock %}
+{% block card_class %} auth__card--wide{% endblock %}
+{% block card %}
+<p class="eyebrow">Área do Colaborador</p>
+<h2 class="auth__title">Olá, {{ user.first_name|default:user.get_username }}!</h2>
+<p class="auth__intro">Bem-vindo(a) à área restrita do TECAB.</p>
+
+<dl class="grid grid--2" style="margin:0 0 1.5rem">
+  <div class="fact"><dt class="muted" style="font-size:.85rem;font-weight:700">Nome</dt><dd style="margin:0;font-weight:800;color:var(--ink-900)">{{ user.get_full_name|default:'—' }}</dd></div>
+  <div class="fact"><dt class="muted" style="font-size:.85rem;font-weight:700">Usuário</dt><dd style="margin:0;font-weight:800;color:var(--ink-900)">{{ user.get_username }}</dd></div>
+  <div class="fact" style="grid-column:1/-1"><dt class="muted" style="font-size:.85rem;font-weight:700">E-mail</dt><dd style="margin:0;font-weight:800;color:var(--ink-900)">{{ user.email|default:'—' }}</dd></div>
+</dl>
+
+<div class="btn-group">
+  <a class="btn btn--outline" href="{% url 'website:alterar_senha' %}">{% icon 'key' %}Alterar senha</a>
+  <a class="btn btn--outline" href="{% static empresa.politica_privacidade %}" target="_blank" rel="noopener">{% icon 'file' %}Política de Privacidade</a>
+  <form method="post" action="{% url 'website:logout' %}" style="margin:0">
+    {% csrf_token %}
+    <button type="submit" class="btn">{% icon 'logout' %}Sair</button>
+  </form>
+</div>
+{% endblock %}

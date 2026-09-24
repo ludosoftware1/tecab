@@ -1,0 +1,15 @@
+{% load site_tags %}<section class="cta-band" aria-labelledby="cta-titulo">
+  <div class="container cta-band__inner">
+    <div>
+      <h2 id="cta-titulo">Precisa armazenar ou movimentar combustíveis em Cabedelo?</h2>
+      <p>Fale com a equipe comercial e conheça as condições de serviço do terminal.</p>
+      {% with comercial=empresa.telefones.1.numeros.0 %}
+      <a class="cta-band__phone" href="tel:{{ comercial.1 }}">{% icon 'phone' %}Comercial: {{ comercial.0 }}</a>
+      {% endwith %}
+    </div>
+    <div class="btn-group">
+      <a class="btn btn--light" href="{% url 'website:contato' %}">Solicitar contato {% icon 'arrow-right' 'icon--arrow' %}</a>
+      <a class="btn btn--ghost" href="{% url 'website:informacoes_anp' %}">Condições de serviço</a>
+    </div>
+  </div>
+</section>

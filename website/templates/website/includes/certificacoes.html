@@ -1,0 +1,5 @@
+{% load site_tags %}<ul class="certs reveal" style="list-style:none;padding:0;margin:0">
+  {% for c in certificacoes %}
+  <li class="cert">{% picture c.imagem 'Selo '|add:c.titulo '60px' %}<span><strong>{{ c.titulo }}</strong><span>{{ c.texto }}</span></span></li>
+  {% endfor %}
+</ul>

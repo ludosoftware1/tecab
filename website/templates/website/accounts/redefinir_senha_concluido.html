@@ -1,12 +1,9 @@
-{% extends "website/accounts/recuperar_senha.html" %}
-{% block um_form %}<div class="um um-password um-um_password_id">
-	<div class="um-form">
-		<p class="um-notice success">Your password has been changed. You can now log in.</p>
-		<div class="um-col-alt">
-			<div class="um-center">
-				<a href="{% url 'website:login' %}" class="um-button">Login</a>
-			</div>
-			<div class="um-clear"></div>
-		</div>
-	</div>
-</div>{% endblock %}
+{% extends "website/accounts/base_auth.html" %}
+{% load site_tags %}
+{% block title %}Senha alterada | Área do Colaborador | TECAB{% endblock %}
+{% block card %}
+<span class="icon-badge" style="background:var(--success-bg);color:var(--success)">{% icon 'check-circle' %}</span>
+<h2 class="auth__title">Senha alterada</h2>
+<p class="auth__intro">Sua nova senha foi salva. Você já pode entrar na Área do Colaborador.</p>
+<a class="btn btn--block" href="{% url 'website:login' %}">Entrar</a>
+{% endblock %}

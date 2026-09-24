@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     'website',
 ]
 
@@ -35,8 +36,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# O visualizador de PDF da página "Informações ANP" é carregado em <iframe> do próprio site.
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+X_FRAME_OPTIONS = 'DENY'
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+# Ative (=1) quando o site estiver atrás de HTTPS.
+if os.environ.get('DJANGO_HTTPS', '0') == '1':
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 60 * 60 * 24 * 30
 
 ROOT_URLCONF = 'tecab.urls'
 
@@ -50,7 +57,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'website.context_processors.menu',
+                'website.context_processors.site',
             ],
         },
     },
@@ -109,4 +116,12 @@ DEFAULT_FROM_EMAIL = os.environ.get('DJANGO_DEFAULT_FROM_EMAIL', 'TECAB <no-repl
 
 # Destinatários dos formulários "Contato" e "Trabalhe Conosco".
 TECAB_CONTATO_DESTINATARIOS = env_list('TECAB_CONTATO_DESTINATARIOS', 'comercial@tecab.srv.br')
+TECAB_INTEGRIDADE_DESTINATARIOS = env_list('TECAB_INTEGRIDADE_DESTINATARIOS', 'lgpd@tecab.srv.br')
 TECAB_CURRICULO_MAX_BYTES = int(os.environ.get('TECAB_CURRICULO_MAX_BYTES', str(5 * 1024 * 1024)))
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {'console': {'class': 'logging.StreamHandler'}},
+    'root': {'handlers': ['console'], 'level': 'WARNING'},
+}

@@ -1,6 +1,0 @@
-{% with r=contato form=contato.form %}<form action="{% url 'website:contato' %}#wpcf7-f131-p2381-o1" method="post" class="wpcf7-form {{ r.state }}" aria-label="Contact form" novalidate="novalidate" data-status="{{ r.state }}">
-<div style="display: none;">
-<input type="hidden" name="form_id" value="contato" />{% csrf_token %}
-</div>
-{% include "website/forms/_field.html" with field=form.nome name="Nome" type="text" placeholder="SEU NOME" extra_class="wpcf7-text wpcf7-validates-as-required" required=True only %}{% include "website/forms/_field.html" with field=form.email name="E-mail" type="email" placeholder="SEU E-MAIL" extra_class="wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email" required=True only %}{% include "website/forms/_field.html" with field=form.mensagem name="Mensagem" type="textarea" placeholder="ESCREVA AQUI SUA MENSAGEM" only %}{% include "website/forms/_submit.html" with r=r only %}
-</form>{% endwith %}

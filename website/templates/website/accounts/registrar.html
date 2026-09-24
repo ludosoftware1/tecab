@@ -1,28 +1,24 @@
-{% extends "website/base.html" %}
-{% load static %}
-{% block title %}Registrar &#8211; TECAB | Terminais de Armazenagens de Cabedelo{% endblock %}
-{% block body_class %}page-template-default page page-id-6954 wp-custom-logo um-page um-page-register um-page-loggedout qode-framework-1.1.6 qodef-qi--no-touch qi-addons-for-elementor-1.6.1 qodef-back-to-top--enabled  qodef-content-grid-1100 qodef-header--standard qodef-header-appearance--none qodef-mobile-header--standard qodef-drop-down-second--full-width stal-core-1.2 stal-child-child-1.0.0 stal-1.4 qodef-header-standard--right qodef-search--on-side elementor-default elementor-kit-9{% endblock %}
-{% block content %}
-
-			<div class="qodef-page-title qodef-m qodef-title--standard qodef-alignment--left qodef-vertical-alignment--header-bottom">
-		<div class="qodef-m-inner">
-		<div class="qodef-m-content qodef-content-grid ">
-    <h1 class="qodef-m-title entry-title">
-        Registrar    </h1>
-    </div>	</div>
-	</div>			<div id="qodef-page-inner" class="qodef-content-grid"><main id="qodef-page-content" class="qodef-grid qodef-layout--template ">
-	<div class="qodef-grid-inner clear">
-		<div class="qodef-grid-item qodef-page-content-section qodef-col--12">
-	
-{% block um_form %}{% include "website/accounts/registrar_form.html" %}{% endblock %}
-<style>
-			.um-6948.um {
-			max-width: 450px;
-		}
-		</style>
-
-</div>	</div>
-</main>
-			</div><!-- close #qodef-page-inner div from header.php -->
-		
+{% extends "website/accounts/base_auth.html" %}
+{% load site_tags %}
+{% block title %}Criar conta | Área do Colaborador | TECAB{% endblock %}
+{% block card_class %} auth__card--wide{% endblock %}
+{% block card %}
+<h2 class="auth__title">Criar conta</h2>
+<p class="auth__intro">Cadastre-se para acessar a Área do Colaborador. Campos com <span class="field__req">*</span> são obrigatórios.</p>
+<form method="post" action="{% url 'website:registrar' %}" novalidate data-enhance>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="alert alert--error" role="alert">{% icon 'alert' %}<p>{{ form.non_field_errors.0 }}</p></div>{% endif %}
+  <div class="form-grid">
+    {% include "website/includes/field.html" with field=form.first_name %}
+    {% include "website/includes/field.html" with field=form.last_name %}
+    {% include "website/includes/field.html" with field=form.email full=True %}
+    {% include "website/includes/field.html" with field=form.username full=True %}
+    {% include "website/includes/field.html" with field=form.password1 tipo='password' %}
+    {% include "website/includes/field.html" with field=form.password2 tipo='password' %}
+  </div>
+  <div class="form-actions">
+    <p class="form-note">Já tem conta? <a href="{% url 'website:login' %}">Entrar</a></p>
+    <button type="submit" class="btn">Criar conta</button>
+  </div>
+</form>
 {% endblock %}

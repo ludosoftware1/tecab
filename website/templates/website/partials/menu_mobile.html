@@ -1,6 +1,0 @@
-<ul id="qodef-mobile-header-navigation-menu" class="qodef-content-grid">{% for item in menu_items %}<li class="{{ item.classes }}"><a href="{{ item.url }}"><span class="qodef-menu-item-inner">{{ item.label }}</span></a>{% if item.children %}<span class="qodef-menu-arrow"></span>
-<div class="qodef-drop-down-second"><div class="qodef-drop-down-second-inner"><ul class="sub-menu">
-{% for child in item.children %}	<li class="{{ child.classes }}"><a href="{{ child.url }}"><span class="qodef-menu-item-inner">{{ child.label }}</span></a></li>
-{% endfor %}</ul></div></div>
-{% endif %}</li>
-{% endfor %}</ul>

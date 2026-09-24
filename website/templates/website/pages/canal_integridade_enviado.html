@@ -1,0 +1,21 @@
+{% extends "website/base.html" %}
+{% load site_tags %}
+
+{% block title %}Relato registrado | Canal de Integridade | TECAB{% endblock %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block content %}
+{% include "website/includes/page_hero.html" with imagem='banner-tanques' titulo='Relato registrado' trilha_pai='Canal de Integridade' trilha_pai_url='/canal-de-integridade/' compacto=True %}
+<section class="auth">
+  <div class="auth__card auth__card--wide">
+    <div class="form-card text-center">
+      <span class="icon-badge" style="background:var(--success-bg);color:var(--success)">{% icon 'check-circle' %}</span>
+      <h2 class="auth__title">Obrigado pelo seu relato</h2>
+      <p class="muted">Ele foi registrado com sucesso e será analisado com confidencialidade. Anote o número de protocolo para referência:</p>
+      <p class="protocol" aria-label="Protocolo {{ protocolo }}">{{ protocolo }}</p>
+      <p class="muted" style="font-size:.95rem">Por segurança, este número não será exibido novamente.</p>
+      <a class="btn" href="{% url 'website:home' %}">Voltar ao início</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

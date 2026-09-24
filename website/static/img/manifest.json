@@ -1,0 +1,393 @@
+{
+ "banner-porto": {
+  "height": 800,
+  "width": 2400,
+  "widths": [
+   960,
+   1600,
+   2400
+  ]
+ },
+ "banner-tanque-logo": {
+  "height": 800,
+  "width": 2400,
+  "widths": [
+   960,
+   1600,
+   2400
+  ]
+ },
+ "banner-tanques": {
+  "height": 800,
+  "width": 2400,
+  "widths": [
+   960,
+   1600,
+   2400
+  ]
+ },
+ "bracos-carregamento": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "casa-bombas": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "centro-controle": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "cliente-ale": {
+  "height": 120,
+  "width": 240,
+  "widths": [
+   240
+  ]
+ },
+ "cliente-dislub": {
+  "height": 240,
+  "width": 480,
+  "widths": [
+   240,
+   480
+  ]
+ },
+ "cliente-fan": {
+  "height": 120,
+  "width": 240,
+  "widths": [
+   240
+  ]
+ },
+ "cliente-federal": {
+  "height": 240,
+  "width": 480,
+  "widths": [
+   240,
+   480
+  ]
+ },
+ "cliente-ipiranga": {
+  "height": 120,
+  "width": 240,
+  "widths": [
+   240
+  ]
+ },
+ "cliente-larco": {
+  "height": 240,
+  "width": 480,
+  "widths": [
+   240,
+   480
+  ]
+ },
+ "cliente-meg": {
+  "height": 240,
+  "width": 480,
+  "widths": [
+   240,
+   480
+  ]
+ },
+ "cliente-petrobahia": {
+  "height": 120,
+  "width": 240,
+  "widths": [
+   240
+  ]
+ },
+ "cliente-petronac": {
+  "height": 120,
+  "width": 240,
+  "widths": [
+   240
+  ]
+ },
+ "cliente-petrox": {
+  "height": 240,
+  "width": 480,
+  "widths": [
+   240,
+   480
+  ]
+ },
+ "cliente-raizen": {
+  "height": 240,
+  "width": 480,
+  "widths": [
+   240,
+   480
+  ]
+ },
+ "cliente-sada": {
+  "height": 240,
+  "width": 480,
+  "widths": [
+   240,
+   480
+  ]
+ },
+ "cliente-setta": {
+  "height": 240,
+  "width": 480,
+  "widths": [
+   240,
+   480
+  ]
+ },
+ "cliente-sp": {
+  "height": 240,
+  "width": 480,
+  "widths": [
+   240,
+   480
+  ]
+ },
+ "cliente-temape": {
+  "height": 240,
+  "width": 480,
+  "widths": [
+   240,
+   480
+  ]
+ },
+ "cliente-vibra": {
+  "height": 240,
+  "width": 480,
+  "widths": [
+   240,
+   480
+  ]
+ },
+ "combate-incendio": {
+  "height": 600,
+  "width": 800,
+  "widths": [
+   480,
+   800
+  ]
+ },
+ "instalacoes-aereas": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "instalacoes-porto": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "integridade-equipamentos": {
+  "height": 600,
+  "width": 800,
+  "widths": [
+   480,
+   800
+  ]
+ },
+ "iso-14001": {
+  "height": 226,
+  "width": 240,
+  "widths": [
+   120,
+   240
+  ]
+ },
+ "iso-45001": {
+  "height": 185,
+  "width": 240,
+  "widths": [
+   120,
+   240
+  ]
+ },
+ "iso-9001": {
+  "height": 224,
+  "width": 240,
+  "widths": [
+   120,
+   240
+  ]
+ },
+ "isps-code": {
+  "height": 243,
+  "width": 240,
+  "widths": [
+   120,
+   240
+  ]
+ },
+ "logo": {
+  "height": 210,
+  "width": 240,
+  "widths": [
+   120,
+   240
+  ]
+ },
+ "logo-branco": {
+  "height": 211,
+  "width": 240,
+  "widths": [
+   120,
+   240
+  ]
+ },
+ "operador-plataforma": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "plataforma-automatizada": {
+  "height": 600,
+  "width": 800,
+  "widths": [
+   480,
+   800
+  ]
+ },
+ "plataforma-rodoviaria": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "porto-cabedelo": {
+  "height": 585,
+  "width": 876,
+  "widths": [
+   480,
+   876
+  ]
+ },
+ "porto-navio": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "profissional-qualificado": {
+  "height": 600,
+  "width": 800,
+  "widths": [
+   480,
+   800
+  ]
+ },
+ "tancagem-plataforma": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "tanques": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "tanques-acesso-rodoviario": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "terminal-aereo-rio": {
+  "height": 1350,
+  "width": 2400,
+  "widths": [
+   640,
+   1024,
+   1600,
+   2400
+  ]
+ },
+ "terminal-margem-rio": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "terminal-porto": {
+  "height": 1350,
+  "width": 2400,
+  "widths": [
+   640,
+   1024,
+   1600,
+   2400
+  ]
+ },
+ "terminal-vertical": {
+  "height": 2133,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "teste-combate-incendio": {
+  "height": 1067,
+  "width": 1600,
+  "widths": [
+   480,
+   960,
+   1600
+  ]
+ },
+ "video-capa": {
+  "height": 540,
+  "width": 960,
+  "widths": [
+   960
+  ]
+ }
+}

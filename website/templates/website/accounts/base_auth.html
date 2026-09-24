@@ -1,0 +1,15 @@
+{% extends "website/base.html" %}
+{% load site_tags %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+{% include "website/includes/page_hero.html" with imagem='banner-tanque-logo' titulo='Área do Colaborador' trilha=trilha|default:'Área do Colaborador' compacto=True %}
+<section class="auth">
+  <div class="auth__card{% block card_class %}{% endblock %}">
+    {% include "website/includes/messages.html" %}
+    <div class="form-card">
+      {% block card %}{% endblock %}
+    </div>
+    {% block after_card %}{% endblock %}
+  </div>
+</section>
+{% endblock %}

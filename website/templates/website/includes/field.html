@@ -1,0 +1,22 @@
+{% load site_tags %}{% comment %}
+Campo de formulário acessível: rótulo visível, indicação de obrigatório/opcional, ajuda e erro associados.
+Parâmetros: field, full (ocupa a linha inteira), tipo ('check', 'file', 'password').
+{% endcomment %}<div class="field{% if full %} field--full{% endif %}">
+  {% if tipo == 'check' %}
+    <label class="check">{{ field }}<span>{{ label|default:field.label }}{% if field.field.required %}<span class="field__req" aria-hidden="true">*</span>{% endif %}</span></label>
+  {% elif tipo == 'file' %}
+    <span class="field__label" id="{{ field.auto_id }}_label">{{ field.label }}{% if field.field.required %}<span class="field__req" aria-hidden="true">*</span>{% endif %}</span>
+    <label class="file-drop" for="{{ field.auto_id }}">
+      {% icon 'upload' %}
+      <span><strong data-file-name>Escolher arquivo</strong><span>{{ field.help_text }}</span></span>
+      <input type="file" name="{{ field.html_name }}" id="{{ field.auto_id }}" accept="{{ field.field.widget.attrs.accept }}"{% if field.field.required %} required{% endif %}{% if field.errors %} aria-invalid="true" aria-describedby="{{ field.auto_id }}_error"{% endif %} aria-labelledby="{{ field.auto_id }}_label">
+    </label>
+  {% else %}
+    <label for="{{ field.auto_id }}">{{ label|default:field.label }}{% if field.field.required %}<span class="field__req" aria-hidden="true">*</span>{% else %}<span class="field__opt">(opcional)</span>{% endif %}</label>
+    {% if tipo == 'password' %}
+      <div class="password-wrap">{{ field }}<button type="button" class="password-toggle" aria-controls="{{ field.auto_id }}" aria-label="Mostrar senha" aria-pressed="false" hidden>{% icon 'eye' %}</button></div>
+    {% else %}{{ field }}{% endif %}
+    {% if field.help_text %}<p class="field__help" id="{{ field.auto_id }}_helptext">{{ field.help_text|safe }}</p>{% endif %}
+  {% endif %}
+  {% for error in field.errors %}<p class="field__error" id="{{ field.auto_id }}_error">{% icon 'alert' %}{{ error }}</p>{% endfor %}
+</div>

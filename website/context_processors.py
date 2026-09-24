@@ -1,38 +1,22 @@
 from django.urls import reverse
+from django.utils import timezone
 
-from .pages import MENU
+from .content import EMPRESA
+
+NAV = [
+    ('home', 'Início'),
+    ('quem_somos', 'Quem somos'),
+    ('informacoes_anp', 'Informações ANP'),
+    ('contato', 'Contato'),
+]
 
 
-def _custom_classes(item, has_children=False):
-    classes = ['menu-item', 'menu-item-type-custom', 'menu-item-object-custom']
-    if has_children:
-        classes += ['menu-item-has-children', 'menu-item-%d' % item['id'], 'qodef-menu-item--narrow']
-    else:
-        classes.append('menu-item-%d' % item['id'])
-    return ' '.join(classes)
-
-
-def menu(request):
-    """Monta o menu com as mesmas classes que o WordPress gerava (incluindo o item atual)."""
+def site(request):
     match = getattr(request, 'resolver_match', None)
-    current = match.url_name if match and match.namespace == 'website' else None
-    items = []
-    for item in MENU:
-        if 'children' in item:
-            items.append({
-                'label': item['label'], 'url': item['url'], 'current': False,
-                'classes': _custom_classes(item, has_children=True),
-                'children': [{'label': c['label'], 'url': c['url'], 'classes': _custom_classes(c)}
-                             for c in item['children']],
-            })
-            continue
-        is_current = item['url_name'] == current
-        classes = ['menu-item', 'menu-item-type-post_type', 'menu-item-object-page']
-        if item.get('home'):
-            classes.append('menu-item-home')
-        if is_current:
-            classes += ['current-menu-item', 'page_item', 'page-item-%d' % item['page_id'], 'current_page_item']
-        classes.append('menu-item-%d' % item['id'])
-        items.append({'label': item['label'], 'url': reverse('website:' + item['url_name']),
-                      'current': is_current, 'classes': ' '.join(classes)})
-    return {'menu_items': items}
+    current = match.url_name if match else None
+    return {
+        'empresa': EMPRESA,
+        'nav': [{'url': reverse('website:' + name), 'label': label, 'active': name == current} for name, label in NAV],
+        'current_url_name': current,
+        'ano_atual': timezone.localdate().year,
+    }

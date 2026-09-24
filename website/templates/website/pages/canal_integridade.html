@@ -1,0 +1,58 @@
+{% extends "website/base.html" %}
+{% load static site_tags %}
+
+{% block title %}Canal de Integridade | TECAB{% endblock %}
+{% block description %}Comunique ao TECAB, de forma anônima e confidencial, situações que descumpram o Código de Ética, o Compliance ou a Lei Geral de Proteção de Dados (LGPD).{% endblock %}
+{% block og_title %}Canal de Integridade | TECAB{% endblock %}
+
+{% block content %}
+{% include "website/includes/page_hero.html" with imagem='banner-tanques' titulo='Canal de Integridade' subtitulo='Respeito e integridade são valores inegociáveis para nós.' %}
+
+<section class="section section--soft">
+  <div class="container split" style="align-items:start">
+    <div class="reveal">
+      <p class="eyebrow">Como funciona</p>
+      <h2>Seu relato é tratado com sigilo</h2>
+      <p>Este canal é destinado à comunicação de situações que descumpram o Código de Ética, o Compliance e os registros da LGPD – Lei Geral de Proteção de Dados. Por aqui você pode encaminhar denúncias de má conduta, fraude e desvio de recursos.</p>
+      <ul class="check-list">
+        <li>{% icon 'check' %}<span><strong>Anonimato opcional:</strong> identifique-se apenas se quiser ser contatado.</span></li>
+        <li>{% icon 'check' %}<span><strong>Confidencialidade:</strong> o relato é acessado somente pelos responsáveis pela apuração.</span></li>
+        <li>{% icon 'check' %}<span><strong>Sem rastreamento:</strong> não registramos seu endereço IP nem dados de navegação junto ao relato.</span></li>
+        <li>{% icon 'check' %}<span><strong>Protocolo:</strong> ao final, você recebe um número para referência.</span></li>
+      </ul>
+      <div class="info-box mt-2">
+        {% icon 'lock' %}
+        <p>Para solicitações sobre seus dados pessoais (LGPD) ou para receber nossa Política de Privacidade, escreva para <a href="mailto:{{ empresa.email_lgpd }}">{{ empresa.email_lgpd }}</a>.</p>
+      </div>
+    </div>
+
+    <div class="form-card reveal">
+      <h2 style="font-size:1.5rem">Registrar relato</h2>
+      <p class="muted">Campos marcados com <span class="field__req">*</span> são obrigatórios.</p>
+      <form method="post" novalidate data-enhance>
+        {% csrf_token %}
+        {% if form.errors %}<div class="alert alert--error" role="alert">{% icon 'alert' %}<p>Revise os campos destacados e tente novamente.</p></div>{% endif %}
+        <div class="stack-form">
+          {% include "website/includes/field.html" with field=form.categoria %}
+          {% include "website/includes/field.html" with field=form.descricao %}
+          {% include "website/includes/field.html" with field=form.quando_onde %}
+          {% include "website/includes/field.html" with field=form.envolvidos %}
+          <fieldset style="border:1px solid var(--line);border-radius:var(--radius-sm);padding:1.25rem;margin:0">
+            <legend style="font-weight:800;color:var(--ink-900);padding:0 .4rem">Identificação (opcional)</legend>
+            <p class="field__help" style="margin-bottom:1rem">Deixe em branco para enviar um relato anônimo.</p>
+            <div class="stack-form">
+              {% include "website/includes/field.html" with field=form.nome %}
+              {% include "website/includes/field.html" with field=form.email %}
+              {% include "website/includes/field.html" with field=form.telefone %}
+            </div>
+          </fieldset>
+          <div class="hp-field" aria-hidden="true">{{ form.site_empresa.label_tag }}{{ form.site_empresa }}</div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn--block">Enviar relato {% icon 'arrow-right' 'icon--arrow' %}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
