@@ -1,0 +1,13 @@
+{% autoescape off %}Olá{% if user.first_name %}, {{ user.first_name }}{% endif %}!
+
+Recebemos um pedido para redefinir a senha da sua conta na Área do Colaborador do TECAB.
+
+Para escolher uma nova senha, acesse:
+{{ protocol }}://{{ domain }}{% url 'website:redefinir_senha' uidb64=uid token=token %}
+
+Seu nome de usuário: {{ user.get_username }}
+
+Se você não fez este pedido, ignore este e-mail.
+
+TECAB - Terminais de Armazenagens de Cabedelo
+{% endautoescape %}

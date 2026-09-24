@@ -1,0 +1,21 @@
+name: tecab2
+
+services:
+  web:
+    build: .
+    container_name: tecab2-web
+    restart: unless-stopped
+    ports:
+      - "${TECAB_PORT:-8090}:8000"
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?defina DJANGO_SECRET_KEY no arquivo .env}
+      DJANGO_DEBUG: "0"
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,[::1]}
+      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-http://localhost:8090,http://127.0.0.1:8090}
+      DJANGO_EMAIL_BACKEND: ${DJANGO_EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
+      TECAB_CONTATO_DESTINATARIOS: ${TECAB_CONTATO_DESTINATARIOS:-comercial@tecab.srv.br}
+    volumes:
+      - tecab2-data:/data
+
+volumes:
+  tecab2-data:

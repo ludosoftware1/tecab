@@ -1,0 +1,9 @@
+{% with r=trabalhe form=trabalhe.form %}<form action="{% url 'website:contato' %}#wpcf7-f6642-p2381-o2" method="post" class="wpcf7-form {{ r.state }}" aria-label="Formulários de contato" enctype="multipart/form-data" novalidate="novalidate" data-status="{{ r.state }}">
+<div style="display: none;">
+<input type="hidden" name="form_id" value="trabalhe-conosco" />{% csrf_token %}
+</div>
+<style>#btarq {background-color:#E50000;color:#FFFFFF;}</style>
+{% include "website/forms/_field.html" with field=form.nome name="Nome" type="text" placeholder="SEU NOME" extra_class="wpcf7-text wpcf7-validates-as-required" required=True only %}{% include "website/forms/_field.html" with field=form.cidade name="Cidade" type="text" placeholder="SUA CIDADE" extra_class="wpcf7-text wpcf7-validates-as-required" required=True only %}{% include "website/forms/_field.html" with field=form.email name="E-mail" type="email" placeholder="SEU E-MAIL" extra_class="wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email" required=True only %}{% include "website/forms/_field.html" with field=form.telefone name="Telefone" type="tel" placeholder="SEU NÚMERO DE TELEFONE" extra_class="wpcf7-text wpcf7-tel wpcf7-validates-as-tel" only %}{% include "website/forms/_field.html" with field=form.mensagem name="Mensagem" type="textarea" placeholder="ESCREVA AQUI SUA MENSAGEM" only %}
+<span style="font-weight:bold;color:#E50000;">CURRÍCULO</span> {% include "website/forms/_field.html" with field=form.curriculo name="Curriculo" type="file" extra_class="wpcf7-file wpcf7-validates-as-required" required=True attrs='id="btarq" accept=".pdf,.doc,.docx"' only %}<br/><br/>
+{% include "website/forms/_submit.html" with r=r only %}
+</form>{% endwith %}

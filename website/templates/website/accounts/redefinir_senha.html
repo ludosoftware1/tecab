@@ -1,0 +1,28 @@
+{% extends "website/accounts/recuperar_senha.html" %}
+{% block um_form %}<div class="um um-password um-um_password_id">
+	<div class="um-form">
+		{% if validlink %}
+		<form method="post" action="">
+			{% csrf_token %}
+			{% include "website/accounts/_um_notices.html" %}
+			<div class="um-field um-field-block um-field-type_block">
+				<div class="um-field-block">
+					<div style="text-align:center;">
+						Enter your new password below and confirm it.					</div>
+				</div>
+			</div>
+			{% include "website/accounts/_um_field.html" with field=form.new_password1 form_id="um_password_id" key="user_password" um_class="um-field-password  um-field-user_password um-field-password um-field-type_password" label="New Password" type="password" only %}{% include "website/accounts/_um_field.html" with field=form.new_password2 form_id="um_password_id" key="confirm_user_password" um_class="um-field-password  um-field-user_password um-field-password um-field-type_password" label="Confirm Password" type="password" only %}			<div class="um-col-alt um-col-alt-b">
+				<div class="um-center">
+					<input type="submit" value="Change my password" class="um-button" id="um-submit-btn" />
+				</div>
+				<div class="um-clear"></div>
+			</div>
+		</form>
+		{% else %}
+		<p class="um-notice err">This password reset link is invalid or has expired.</p>
+		<div class="um-col-alt-b">
+			<a href="{% url 'website:recuperar_senha' %}" class="um-link-alt">Request a new password reset link</a>
+		</div>
+		{% endif %}
+	</div>
+</div>{% endblock %}

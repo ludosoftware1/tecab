@@ -1,0 +1,6 @@
+{% comment %}
+Campo no formato do plugin Ultimate Member.
+Parâmetros: field, form_id, key (data-key), um_class, label, type, placeholder, validate, not_required (bool), no_label (bool).
+{% endcomment %}<div  id="um_field_{{ form_id }}_{{ key }}" class="um-field {{ um_class }}" data-key="{{ key }}">{% if not no_label %}<div class="um-field-label"><label for="{{ key }}-{{ form_id }}">{{ label }}</label><div class="um-clear"></div></div>{% endif %}<div class="um-field-area"><input {% if type != "password" %}autocomplete="off" {% endif %}class="um-form-field valid {% if not_required %}not-required {% endif %}{% if field.errors %}um-error{% endif %}" type="{{ type }}" name="{{ field.html_name }}" id="{% if id %}{{ id }}{% else %}{{ key }}-{{ form_id }}{% endif %}" value="{% if type != "password" %}{{ field.value|default_if_none:'' }}{% endif %}" placeholder="{{ placeholder }}" data-validate="{{ validate }}" data-key="{{ key }}" aria-invalid="{{ field.errors|yesno:'true,false' }}" />
+
+							</div>{% for error in field.errors %}<div class="um-field-error" id="um-error-for-{{ key }}-{{ form_id }}"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>{{ error }}</div>{% endfor %}</div>

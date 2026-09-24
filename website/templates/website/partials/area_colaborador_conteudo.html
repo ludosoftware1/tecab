@@ -1,0 +1,4 @@
+{% if user.is_authenticated %}<p>Olá, {{ user.get_full_name|default:user.get_username }}! Bem-vindo(a) à Área do Colaborador.</p>
+<form method="post" action="{% url 'website:logout' %}">{% csrf_token %}<p><button type="submit" style="background:none;border:0;padding:0;color:inherit;font:inherit;text-decoration:underline;cursor:pointer;">Sair</button></p></form>{% else %}<p>Você precisa estar logado para acessar esta área.</p>
+<p><a href="{% url 'website:login' %}">Login</a></p>
+<p><a href="{% url 'website:registrar' %}">Cadastrar-se.</a></p>{% endif %}

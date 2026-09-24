@@ -1,0 +1,38 @@
+{% extends "website/base.html" %}
+{% load static %}
+{% block title %}Área do Colaborador &#8211; TECAB | Terminais de Armazenagens de Cabedelo{% endblock %}
+{% block body_class %}page-template-default page page-id-6946 wp-custom-logo qode-framework-1.1.6 qodef-qi--no-touch qi-addons-for-elementor-1.6.1 qodef-back-to-top--enabled  qodef-content-grid-1100 qodef-header--standard qodef-header-appearance--none qodef-mobile-header--standard qodef-drop-down-second--full-width stal-core-1.2 stal-child-child-1.0.0 stal-1.4 qodef-header-standard--right qodef-search--on-side elementor-default elementor-kit-9 elementor-page elementor-page-6946{% endblock %}
+{% block content %}
+
+			<div class="qodef-page-title qodef-m qodef-title--standard qodef-alignment--left qodef-vertical-alignment--header-bottom">
+		<div class="qodef-m-inner">
+		<div class="qodef-m-content qodef-content-grid ">
+    <h1 class="qodef-m-title entry-title">
+        Área do Colaborador    </h1>
+    </div>	</div>
+	</div>			<div id="qodef-page-inner" class="qodef-content-grid"><main id="qodef-page-content" class="qodef-grid qodef-layout--template ">
+	<div class="qodef-grid-inner clear">
+		<div class="qodef-grid-item qodef-page-content-section qodef-col--12">
+	{% include "website/partials/area_colaborador_conteudo.html" %}</div>	</div>
+</main>
+			</div><!-- close #qodef-page-inner div from header.php -->
+		
+{% endblock %}
+{% block footer_css %}
+<link rel='stylesheet' id='catf-dg-datatables-css' href='{% static 'wp-content/plugins/catfolders-document-gallery/assets/css/dataTables/jquery.dataTables.min.css' %}' type='text/css' media='all' />
+<link rel='stylesheet' id='catf-dg-frontend-css' href='{% static 'wp-content/plugins/catfolders-document-gallery/assets/css/styles.min.css' %}' type='text/css' media='all' />
+<link rel='stylesheet' id='catf-dg-datatables-responsive-css' href='{% static 'wp-content/plugins/catfolders-document-gallery/assets/css/dataTables/responsive.dataTables.min.css' %}' type='text/css' media='all' />
+{% endblock %}
+{% block page_scripts %}
+<script type='text/javascript' id='catf-dg-datatables-js-extra'>
+/* <![CDATA[ */
+var catf_dg = {"verify_imagick":{"status":true,"installed":{"imageMagick":false,"imagick":true,"ghostScript":false}}};
+var catf_dg = {"api":{"rest_nonce":"d2d1d0bc86","rest_url":"\/index.php?rest_route=\/CatFolders\/v1"}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='{% static 'wp-content/plugins/catfolders-document-gallery/assets/js/dataTables/jquery.dataTables.min.js' %}' id='catf-dg-datatables-js'></script>
+<script type='text/javascript' src='{% static 'wp-content/plugins/catfolders-document-gallery/assets/js/dataTables/natural.min.js' %}' id='catf-dg-datatables-natural-js'></script>
+<script type='text/javascript' src='{% static 'wp-content/plugins/catfolders-document-gallery/assets/js/dataTables/filesize.min.js' %}' id='catf-dg-datatables-filesize-js'></script>
+<script type='text/javascript' src='{% static 'wp-content/plugins/catfolders-document-gallery/assets/js/dataTables/dataTables.responsive.min.js' %}' id='catf-dg-datatables-responsive-js'></script>
+<script type='text/javascript' src='{% static 'wp-content/plugins/catfolders-document-gallery/build/view.js' %}' id='catf-dg-frontend-js'></script>
+{% endblock %}

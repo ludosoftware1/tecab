@@ -1,0 +1,27 @@
+{% extends "website/base.html" %}
+{% load static %}
+{% block title %}Password Reset &#8211; TECAB | Terminais de Armazenagens de Cabedelo{% endblock %}
+{% block body_class %}page-template-default page page-id-6958 wp-custom-logo um-page um-page-password-reset um-page-loggedout qode-framework-1.1.6 qodef-qi--no-touch qi-addons-for-elementor-1.6.1 qodef-back-to-top--enabled  qodef-content-grid-1100 qodef-header--standard qodef-header-appearance--none qodef-mobile-header--standard qodef-drop-down-second--full-width stal-core-1.2 stal-child-child-1.0.0 stal-1.4 qodef-header-standard--right qodef-search--on-side elementor-default elementor-kit-9{% endblock %}
+{% block content %}
+
+			<div class="qodef-page-title qodef-m qodef-title--standard qodef-alignment--left qodef-vertical-alignment--header-bottom">
+		<div class="qodef-m-inner">
+		<div class="qodef-m-content qodef-content-grid ">
+    <h1 class="qodef-m-title entry-title">
+        Password Reset    </h1>
+    </div>	</div>
+	</div>			<div id="qodef-page-inner" class="qodef-content-grid"><main id="qodef-page-content" class="qodef-grid qodef-layout--template ">
+	<div class="qodef-grid-inner clear">
+		<div class="qodef-grid-item qodef-page-content-section qodef-col--12">
+	{% block um_form %}{% include "website/accounts/recuperar_senha_form.html" %}{% endblock %}
+<style>
+			.um-um_password_id.um {
+			max-width: 450px;
+		}
+		</style>
+
+</div>	</div>
+</main>
+			</div><!-- close #qodef-page-inner div from header.php -->
+		
+{% endblock %}

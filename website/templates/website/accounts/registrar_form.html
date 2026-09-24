@@ -1,0 +1,20 @@
+<div class="um um-register um-6948">
+	<div class="um-form" data-mode="register">
+		<form method="post" action="{% url 'website:registrar' %}">
+			{% csrf_token %}
+			{% include "website/accounts/_um_notices.html" %}
+			<div class="um-row _um_row_1 " style="margin: 0 0 30px 0;"><div class="um-col-1">{% include "website/accounts/_um_field.html" with field=form.username form_id="6948" key="user_login" um_class="um-field-text  um-field-user_login um-field-text um-field-type_text" label="Login" type="text" validate="unique_username" only %}{% include "website/accounts/_um_field.html" with field=form.first_name form_id="6948" key="first_name" um_class="um-field-text  um-field-first_name um-field-text um-field-type_text" label="Nome" type="text" not_required=True only %}{% include "website/accounts/_um_field.html" with field=form.last_name form_id="6948" key="last_name" um_class="um-field-text  um-field-last_name um-field-text um-field-type_text" label="Sobrenome" type="text" not_required=True only %}{% include "website/accounts/_um_field.html" with field=form.email form_id="6948" key="user_email" um_class="um-field-text  um-field-user_email um-field-text um-field-type_text" label="E-mail" type="text" validate="unique_email" not_required=True only %}{% include "website/accounts/_um_field.html" with field=form.password1 form_id="6948" key="user_password" um_class="um-field-password  um-field-user_password um-field-password um-field-type_password" label="Senha" type="password" only %}{% include "website/accounts/_um_field.html" with field=form.password2 form_id="6948" key="confirm_user_password" um_class="um-field-password  um-field-user_password um-field-password um-field-type_password" label="Confirmar Senha" type="password" placeholder="Confirmar Senha" only %}</div></div>	<input type="hidden" name="form_id" id="form_id_6948" value="6948" />
+	<div class="um-col-alt">
+
+			<div class="um-center">
+				<input type="submit" value="Registrar" class="um-button" id="um-submit-btn" />
+			</div>
+
+
+		<div class="um-clear"></div>
+
+	</div>
+
+			</form>
+	</div>
+</div>
