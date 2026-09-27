@@ -65,12 +65,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tecab.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': Path(os.environ.get('DJANGO_DB_PATH', BASE_DIR / 'db.sqlite3')),
+# Produção (Docker): PostgreSQL, ativado quando POSTGRES_DB está definido.
+# Desenvolvimento e testes: SQLite local.
+if os.environ.get('POSTGRES_DB'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['POSTGRES_DB'],
+            'USER': os.environ.get('POSTGRES_USER', 'tecab'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
+            'HOST': os.environ.get('POSTGRES_HOST', 'db'),
+            'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+            'CONN_MAX_AGE': 60,
+            'CONN_HEALTH_CHECKS': True,
+        }
     }
-}
+    # Banco SQLite da versão anterior: se existir, a migration website.0003 copia os dados dele
+    # para o PostgreSQL (uma única vez, com o banco novo vazio).
+    _sqlite_legado = os.environ.get('DJANGO_SQLITE_LEGADO', '')
+    if _sqlite_legado and Path(_sqlite_legado).is_file():
+        DATABASES['legado'] = {'ENGINE': 'django.db.backends.sqlite3', 'NAME': Path(_sqlite_legado)}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': Path(os.environ.get('DJANGO_DB_PATH', BASE_DIR / 'db.sqlite3')),
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

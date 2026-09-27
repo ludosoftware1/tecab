@@ -6,18 +6,25 @@ mantendo a identidade visual da empresa (vermelho `#ee0d08`, grafite `#101010`, 
 ## Executar com Docker
 
 ```bash
-cp .env.example .env        # defina DJANGO_SECRET_KEY e, se quiser, TECAB_PORT
-docker compose up -d --build
+cp .env.example .env        # defina DJANGO_SECRET_KEY, POSTGRES_PASSWORD, DJANGO_ADMIN_* e, se quiser, TECAB_PORT
+./build.sh                  # git pull + docker compose up -d --build
 ```
 
-O site sobe em `http://localhost:8090` (ou na porta de `TECAB_PORT`). Banco SQLite e currículos enviados
-ficam no volume `tecab2-data`.
+O site sobe em `http://localhost:8090` (ou na porta de `TECAB_PORT`). O banco é PostgreSQL (serviço `db`,
+volume `tecab2-pgdata`); os currículos enviados ficam no volume `tecab2-data` (`/data/media`).
 
-Criar um administrador (para ver mensagens, candidaturas e relatos em `/admin/`):
+**Container do PostgreSQL opcional:** no `.env`, `COMPOSE_PROFILES=postgres` sobe o container do banco junto
+com o site. Deixe `COMPOSE_PROFILES=` vazio para não subir e usar um PostgreSQL externo, informando
+`POSTGRES_HOST`/`POSTGRES_PORT` (para um banco no próprio servidor use `POSTGRES_HOST=host.docker.internal`).
 
-```bash
-docker compose exec web python manage.py createsuperuser
-```
+**Migração do SQLite:** se o volume `tecab2-data` tiver o `db.sqlite3` da versão anterior, a migration
+`website.0003_importar_sqlite` copia todos os dados dele (usuários e senhas, grupos, permissões, sessões,
+histórico do admin, mensagens, candidaturas e relatos) para o PostgreSQL, com os mesmos IDs, na primeira
+inicialização. O arquivo SQLite é mantido como cópia de segurança.
+
+**Administrador:** a cada inicialização o container cria/atualiza o superusuário definido em
+`DJANGO_ADMIN_USER` / `DJANGO_ADMIN_PASSWORD` / `DJANGO_ADMIN_EMAIL` (o `.env` é a fonte da senha; para
+trocá-la, altere o `.env` e rode `./build.sh`). Acesso em `/admin/`.
 
 ## Desenvolvimento
 

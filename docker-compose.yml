@@ -1,10 +1,36 @@
 name: tecab2
 
 services:
+  db:
+    # Só sobe com o profile "postgres" ativo (COMPOSE_PROFILES=postgres no .env).
+    # Sem ele, o site usa o PostgreSQL externo de POSTGRES_HOST/POSTGRES_PORT.
+    profiles: [postgres]
+    image: postgres:17-alpine
+    container_name: tecab2-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-tecab}
+      POSTGRES_USER: ${POSTGRES_USER:-tecab}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no arquivo .env}
+    volumes:
+      - tecab2-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
   web:
     build: .
     container_name: tecab2-web
     restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false  # ignorado quando o container do banco está desativado
+    extra_hosts:
+      # Permite POSTGRES_HOST=host.docker.internal para um PostgreSQL no próprio servidor.
+      - "host.docker.internal:host-gateway"
     ports:
       - "${TECAB_PORT:-8090}:8000"
     environment:
@@ -14,8 +40,20 @@ services:
       DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-http://localhost:8090,http://127.0.0.1:8090}
       DJANGO_EMAIL_BACKEND: ${DJANGO_EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
       TECAB_CONTATO_DESTINATARIOS: ${TECAB_CONTATO_DESTINATARIOS:-comercial@tecab.srv.br}
+      POSTGRES_DB: ${POSTGRES_DB:-tecab}
+      POSTGRES_USER: ${POSTGRES_USER:-tecab}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST:-db}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      # Banco da versão anterior (SQLite), importado para o PostgreSQL no primeiro migrate.
+      DJANGO_SQLITE_LEGADO: /data/db.sqlite3
+      DJANGO_ADMIN_USER: ${DJANGO_ADMIN_USER:-}
+      DJANGO_ADMIN_EMAIL: ${DJANGO_ADMIN_EMAIL:-}
+      DJANGO_ADMIN_PASSWORD: ${DJANGO_ADMIN_PASSWORD:-}
     volumes:
+      # Currículos enviados (/data/media) e o SQLite da versão anterior.
       - tecab2-data:/data
 
 volumes:
   tecab2-data:
+  tecab2-pgdata:
