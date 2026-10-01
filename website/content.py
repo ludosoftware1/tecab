@@ -81,9 +81,9 @@ DIFERENCIAIS = [
     {'imagem': 'integridade-equipamentos', 'icone': 'wrench', 'titulo': 'Integridade de equipamentos',
      'texto': 'Inspeções regulares de tanques, bombas e tubulações asseguram processos eficientes e sustentáveis.',
      'alt': 'Tubulações e válvulas da casa de bombas do terminal'},
-    {'imagem': 'combate-incendio', 'icone': 'flame', 'titulo': 'Combate a incêndio',
-     'texto': 'Sistema de combate a incêndio com captação infinita de água do rio, pronto para responder a emergências.',
-     'alt': 'Tubulações vermelhas e reservatórios do sistema de combate a incêndio'},
+    {'imagem': 'combate-incendio', 'icone': 'flame', 'titulo': 'Atendimento à Emergência',
+         'texto': 'Sistema de combate a incêndio robusto e automatizado, com captação infinita de água do rio.',
+         'alt': 'Tubulações vermelhas e reservatórios do sistema de combate a incêndio'},
 ]
 
 CERTIFICACOES = [
@@ -119,6 +119,12 @@ HISTORIA = [
     {'ano': '1997', 'titulo': 'Ampliação das operações',
      'texto': 'Para atender às distribuidoras de combustíveis, o terminal passa a armazenar e movimentar derivados '
               'de petróleo (gasolina e óleo diesel) e biocombustíveis (biodiesel).'},
+    {'ano': '2005', 'titulo': 'Ampliação da tancagem',
+     'texto': 'Ampliação da capacidade de armazenagem com a construção de novos tanques, somando 18 mil m³ '
+              'adicionais ao parque de tancagem do terminal.'},
+    {'ano': '2020', 'titulo': 'Nova ampliação da tancagem',
+     'texto': 'Novo marco de crescimento da TECAB, somando mais 17,2 mil m³ de capacidade de armazenagem ao '
+              'terminal.'},
     {'ano': 'Hoje', 'titulo': 'Gestão integrada e certificada',
      'texto': 'Operação pelos modais marítimo, rodoviário e dutoviário, com certificações ISO 9001, ISO 14001, '
               'ISO 45001 e ISPS Code.'},
