@@ -41,7 +41,7 @@ EMPRESA = {
         {'rotulo': 'Portal do Cliente (alternativo)', 'descricao': 'Use se o acesso principal estiver indisponível',
          'url': 'http://128.201.185.254/Portal/Portal'},
     ],
-    'politica_privacidade': 'docs/politica-de-privacidade.pdf',
+    'politica_privacidade': 'docs/politica-de-privacidade.docx',
 }
 
 NUMEROS = [
@@ -110,7 +110,8 @@ CLIENTES = [
     {'chave': 'sp', 'nome': 'SP Distribuidora', 'url': 'http://spdistribuidora.com'},
     {'chave': 'dislub', 'nome': 'Dislub Equador', 'url': 'https://dislubenergia.com.br'},
     {'chave': 'federal', 'nome': 'Federal Petróleo', 'url': 'https://www.federalpetroleo.com.br'},
-]
+        {'chave': 'nimo', 'nome': 'Nimo Energia', 'url': 'https://nimoenergia.com.br/'},
+    ]
 
 HISTORIA = [
     {'ano': '1994', 'titulo': 'Fundação',

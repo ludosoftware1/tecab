@@ -49,6 +49,6 @@ IMAGES = {
 }
 
 CLIENTES = ['petrobahia', 'vibra', 'raizen', 'ipiranga', 'ale', 'temape', 'petrox', 'petronac', 'meg', 'fan',
-            'larco', 'sada', 'setta', 'sp', 'dislub', 'federal']
+            'larco', 'sada', 'setta', 'sp', 'dislub', 'federal', 'nimo']
 for _cliente in CLIENTES:
     IMAGES['cliente-' + _cliente] = ('clientes/%s.png' % _cliente, [240, 480], None, False)
