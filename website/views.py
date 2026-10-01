@@ -94,12 +94,14 @@ def contato(request):
                         _notificar('[Site TECAB] %s - %s' % (obj.get_assunto_display(), obj.nome),
                                    'Nome: %s\nE-mail: %s\nTelefone: %s\nAssunto: %s\n\n%s'
                                    % (obj.nome, obj.email, obj.telefone, obj.get_assunto_display(), obj.mensagem),
-                                   settings.TECAB_CONTATO_DESTINATARIOS, obj.email)
+                                   settings.TECAB_CONTATO_FALE_DESTINATARIOS, obj.email)
                     else:
                         _notificar('[Site TECAB] Trabalhe Conosco - %s' % obj.nome,
-                                   'Nome: %s\nCidade: %s\nE-mail: %s\nTelefone: %s\n\n%s'
-                                   % (obj.nome, obj.cidade, obj.email, obj.telefone, obj.mensagem),
-                                   settings.TECAB_CONTATO_DESTINATARIOS, obj.email, anexo=obj.curriculo)
+                                   'Nome: %s\nCidade: %s\nE-mail: %s\nTelefone: %s\n\n%s\n\n'
+                                   'Currículo em anexo: %s (%d bytes).'
+                                   % (obj.nome, obj.cidade, obj.email, obj.telefone, obj.mensagem,
+                                      obj.curriculo.name, obj.curriculo.size),
+                                   settings.TECAB_CONTATO_TRABALHE_DESTINATARIOS, obj.email, anexo=obj.curriculo)
                 except Exception:  # a mensagem já está gravada; apenas o aviso por e-mail falhou
                     logger.exception('Falha ao enviar o e-mail do formulário %s', aba)
             if aba == 'contato':

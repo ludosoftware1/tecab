@@ -68,7 +68,8 @@ As imagens são servidas em WebP responsivo (várias larguras), geradas a partir
 
 Os endereços antigos do WordPress (`?page_id=`, `?p=`, `?portfolio-item=`...) redirecionam (301) para as novas rotas.
 
-Os formulários gravam no banco (visível no admin) e enviam e-mail para `TECAB_CONTATO_DESTINATARIOS`;
-os relatos do Canal de Integridade notificam `TECAB_INTEGRIDADE_DESTINATARIOS` **sem** incluir o conteúdo do
-relato no e-mail. Por padrão os e-mails saem no console; configure SMTP pelas variáveis `DJANGO_EMAIL_*`
+Os formulários gravam no banco (visível no admin) e enviam e-mail para os destinatários configurados
+em `TECAB_CONTATO_FALE_DESTINATARIOS` (Fale Conosco), `TECAB_CONTATO_TRABALHE_DESTINATARIOS`
+(Trabalhe Conosco) e `TECAB_INTEGRIDADE_DESTINATARIOS` (Canal de Integridade — sem conteúdo do
+relato). Por padrão os e-mails saem no console; configure SMTP pelas variáveis `DJANGO_EMAIL_*`
 (veja `.env.example`). Em produção com HTTPS, defina `DJANGO_HTTPS=1`.

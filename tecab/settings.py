@@ -135,8 +135,10 @@ EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD', '')
 EMAIL_USE_TLS = os.environ.get('DJANGO_EMAIL_USE_TLS', '0') == '1'
 DEFAULT_FROM_EMAIL = os.environ.get('DJANGO_DEFAULT_FROM_EMAIL', 'TECAB <no-reply@tecab.srv.br>')
 
-# Destinatários dos formulários "Contato" e "Trabalhe Conosco".
-TECAB_CONTATO_DESTINATARIOS = env_list('TECAB_CONTATO_DESTINATARIOS', 'comercial@tecab.srv.br')
+# Destinatários dos formulários: separa "Fale Conosco" de "Trabalhe Conosco".
+# O Canal de Integridade tem lista própria (pode incluir DPO/compliance).
+TECAB_CONTATO_FALE_DESTINATARIOS = env_list('TECAB_CONTATO_FALE_DESTINATARIOS', 'contato@tecab.srv.br')
+TECAB_CONTATO_TRABALHE_DESTINATARIOS = env_list('TECAB_CONTATO_TRABALHE_DESTINATARIOS', 'vandressa@tecab.srv.br')
 TECAB_INTEGRIDADE_DESTINATARIOS = env_list('TECAB_INTEGRIDADE_DESTINATARIOS', 'lgpd@tecab.srv.br')
 TECAB_CURRICULO_MAX_BYTES = int(os.environ.get('TECAB_CURRICULO_MAX_BYTES', str(5 * 1024 * 1024)))
 
