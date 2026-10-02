@@ -39,7 +39,7 @@ class SiteFormMixin:
         if 'aceite_privacidade' in self.fields:
             self.fields['aceite_privacidade'].label = format_html(
                 'Li e concordo com a <a href="{}" target="_blank" rel="noopener">Política de Privacidade</a> e autorizo '
-                'o uso dos meus dados para este atendimento.', static('docs/politica-de-privacidade.pdf'))
+                'o uso dos meus dados para este atendimento.', static('docs/politica-de-privacidade.docx'))
         if self.honeypot:
             self.fields['site_empresa'] = forms.CharField(required=False, label='Não preencha este campo',
                                                           widget=forms.TextInput(attrs={'tabindex': '-1',
