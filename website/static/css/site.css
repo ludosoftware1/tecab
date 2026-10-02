@@ -383,6 +383,10 @@ strong { color: var(--ink-900); }
 .section--dark .cert { background: rgb(255 255 255 / .04); border-color: rgb(255 255 255 / .1); }
 .cert img { width: 60px; height: 60px; object-fit: contain; flex: none; }
 .section--dark .cert img { background: #fff; border-radius: 12px; padding: 6px; }
+.cert--text-only { display: block; text-align: center; padding: 1.4rem 1.25rem; }
+.cert--text-only .cert__body strong { display: block; font-size: 1.15rem; margin-bottom: .25rem; }
+.cert--text-only .cert__body span { display: block; font-size: .92rem; line-height: 1.4; color: var(--ink-500); }
+.section--dark .cert--text-only .cert__body span { color: #aeb3b9; }
 .cert strong { display: block; font-size: 1.05rem; }
 .section--dark .cert strong { color: #fff; }
 .cert span { display: block; font-size: .88rem; line-height: 1.35; color: var(--ink-500); }
