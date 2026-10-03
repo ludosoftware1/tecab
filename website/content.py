@@ -91,6 +91,7 @@ CERTIFICACOES = [
     {'imagem': 'iso-14001', 'titulo': 'ISO 14001', 'texto': 'Gestão Ambiental'},
     {'imagem': 'iso-45001', 'titulo': 'ISO 45001', 'texto': 'Segurança e Saúde no Trabalho'},
     {'imagem': 'isps-code', 'titulo': 'ISPS Code', 'texto': 'Proteção de Navios e Instalações Portuárias'},
+    {'imagem': None, 'titulo': 'SMARTT', 'texto': 'Inspeção de Terminais'},
 ]
 
 CLIENTES = [
@@ -128,7 +129,7 @@ HISTORIA = [
               'terminal.'},
     {'ano': 'Hoje', 'titulo': 'Gestão integrada e certificada',
      'texto': 'Operação pelos modais marítimo, rodoviário e dutoviário, com certificações ISO 9001, ISO 14001, '
-              'ISO 45001 e ISPS Code.'},
+              'ISO 45001, SMARTT e ISPS Code.'},
 ]
 
 MVV = [
