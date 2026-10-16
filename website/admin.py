@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Candidatura, MensagemContato, RelatoIntegridade
+from .models import Candidatura, MensagemContato, MovimentacaoANP, ProdutoANP, RelatoIntegridade
 
 admin.site.site_header = 'TECAB - Administração do site'
 admin.site.site_title = 'TECAB'
@@ -41,3 +41,30 @@ class RelatoIntegridadeAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+
+@admin.register(ProdutoANP)
+class ProdutoANPAdmin(admin.ModelAdmin):
+    list_display = ('descricao', 'codigo_anp', 'ativo')
+    list_filter = ('ativo',)
+    search_fields = ('descricao', 'codigo_anp')
+
+
+@admin.register(MovimentacaoANP)
+class MovimentacaoANPAdmin(admin.ModelAdmin):
+    list_display = ('mes', 'sentido', 'modo_transporte', 'tipo_operacao', 'produto', 'volume_m3', 'atualizado_por',
+                    'atualizado_em')
+    list_filter = ('sentido', 'modo_transporte', 'tipo_operacao', 'produto', 'mes_referencia')
+    date_hierarchy = 'mes_referencia'
+    list_select_related = ('produto', 'atualizado_por')
+    readonly_fields = ('criado_em', 'criado_por', 'atualizado_em', 'atualizado_por')
+
+    @admin.display(description='mês', ordering='mes_referencia')
+    def mes(self, obj):
+        return obj.mes
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.criado_por = request.user
+        obj.atualizado_por = request.user
+        super().save_model(request, obj, form, change)

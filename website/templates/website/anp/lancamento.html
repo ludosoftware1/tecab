@@ -1,0 +1,76 @@
+{% extends "website/anp/base_anp.html" %}
+{% load static site_tags %}
+{% block title %}Lançamento {{ mes|date:"m/Y" }} | Movimentação ANP | TECAB{% endblock %}
+{% block hero %}{% url 'website:anp_painel' as url_painel %}{% include "website/includes/page_hero.html" with imagem='banner-tanques' titulo='Lançamento mensal' subtitulo='Volumes do mês em m³ a 20 °C, um por combinação de sentido, modal, tipo de operação e produto.' trilha_pai='Movimentação ANP' trilha_pai_url=url_painel trilha='Lançamento mensal' compacto=True %}{% endblock %}
+
+{% block bar_nav %}
+<a class="btn btn--sm btn--outline" href="{% url 'website:anp_painel' %}">{% icon 'arrow-left' %}Voltar ao painel</a>
+{% endblock %}
+
+{% block anp_content %}
+<div class="mes-nav">
+  <a class="btn btn--sm btn--ghost" href="{% url 'website:anp_lancamento_mes' anterior|date:'Y-m' %}">{% icon 'arrow-left' %}<span>{{ anterior|date:"m/Y" }}</span></a>
+  <form method="get" action="{% url 'website:anp_lancamento' %}" class="mes-nav__form">
+    <label for="mes-escolha">Mês de referência</label>
+    <input type="month" id="mes-escolha" name="mes" value="{{ mes|date:'Y-m' }}" max="{{ mes_atual|date:'Y-m' }}" list="meses-lancados" required>
+    <datalist id="meses-lancados">{% for m in meses %}<option value="{{ m|date:'Y-m' }}">{% endfor %}</datalist>
+    <button type="submit" class="btn btn--sm btn--outline">Abrir</button>
+  </form>
+  {% if seguinte <= mes_atual %}<a class="btn btn--sm btn--ghost" href="{% url 'website:anp_lancamento_mes' seguinte|date:'Y-m' %}"><span>{{ seguinte|date:"m/Y" }}</span>{% icon 'arrow-right' %}</a>{% else %}<span></span>{% endif %}
+</div>
+
+<form method="post" class="form-card lanc" novalidate data-enhance data-lancamento>
+  {% csrf_token %}
+  {{ formset.management_form }}
+  <div class="lanc__head">
+    <h2>{{ mes|date:"F \d\e Y"|capfirst }}</h2>
+    {% if novo %}
+      <p class="lanc__badge">Mês ainda não lançado</p>
+    {% else %}
+      <p class="lanc__badge lanc__badge--ok">{{ formset.initial_form_count }} linha{{ formset.initial_form_count|pluralize }} lançada{{ formset.initial_form_count|pluralize }}</p>
+    {% endif %}
+  </div>
+  {% if novo and base %}
+  <div class="alert alert--info">{% icon 'alert' %}<p>As linhas abaixo repetem as combinações lançadas em <strong>{{ base|date:"m/Y" }}</strong>. Informe os volumes do mês; linhas deixadas sem volume são ignoradas. Para registrar que não houve movimentação, informe 0.</p></div>
+  {% endif %}
+  {% if formset.non_form_errors %}<div class="alert alert--error" role="alert">{% icon 'alert' %}<p>{{ formset.non_form_errors.0 }}</p></div>{% endif %}
+  {% if formset.total_error_count %}<div class="alert alert--error" role="alert">{% icon 'alert' %}<p>Corrija as linhas destacadas e salve novamente.</p></div>{% endif %}
+
+  <div class="table-wrap">
+    <table class="data-table lanc__table">
+      <caption class="visually-hidden">Lançamentos de {{ mes|date:"m/Y" }}</caption>
+      <thead>
+        <tr>
+          <th scope="col">Sentido</th>
+          <th scope="col">Modal</th>
+          <th scope="col">Tipo da operação</th>
+          <th scope="col">Produto</th>
+          <th scope="col" class="num">Volume (m³)</th>
+          <th scope="col"><span class="visually-hidden">Excluir</span></th>
+        </tr>
+      </thead>
+      <tbody data-rows>
+        {% for form in formset %}
+          {% include "website/anp/includes/linha_lancamento.html" %}
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr><th scope="row" colspan="4">Total recebido</th><td class="num" data-soma="1">—</td><td></td></tr>
+        <tr><th scope="row" colspan="4">Total entregue</th><td class="num" data-soma="2">—</td><td></td></tr>
+      </tfoot>
+    </table>
+  </div>
+  <template data-empty-row>{% with form=formset.empty_form %}{% include "website/anp/includes/linha_lancamento.html" %}{% endwith %}</template>
+
+  <div class="lanc__actions">
+    <button type="button" class="btn btn--sm btn--outline" data-add-row>{% icon 'sheet' %}Adicionar linha</button>
+    <div class="btn-group">
+      <a class="btn btn--ghost" href="{% url 'website:anp_painel' %}">Cancelar</a>
+      <button type="submit" class="btn">{% icon 'check' %}Salvar {{ mes|date:"m/Y" }}</button>
+    </div>
+  </div>
+  <p class="form-note">O volume aceita vírgula como separador decimal (ex.: 35816,58). Produtos novos são cadastrados pelo administrador em /admin/.</p>
+</form>
+{% endblock %}
+
+{% block scripts %}<script src="{% static 'js/painel-anp.js' %}"></script>{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "website/base.html" %}
+{% load static site_tags %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% static 'css/painel-anp.css' %}">{% endblock %}
+{% block body_class %}anp-page{% endblock %}
+{% block content %}
+{% block hero %}{% endblock %}
+<div class="anp">
+  <div class="anp__container">
+    <div class="anp-bar">
+      <p class="anp-bar__user">{% icon 'user' %}<span>{{ user.get_full_name|default:user.get_username }}</span></p>
+      <nav class="anp-bar__nav" aria-label="Gestão da movimentação ANP">
+        {% block bar_nav %}{% endblock %}
+        <form method="post" action="{% url 'website:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn--sm btn--ghost">{% icon 'logout' %}Sair</button>
+        </form>
+      </nav>
+    </div>
+    {% include "website/includes/messages.html" %}
+    {% block anp_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

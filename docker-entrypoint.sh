@@ -7,4 +7,5 @@ if [ -n "$DJANGO_SQLITE_LEGADO" ] && [ -f "$DJANGO_SQLITE_LEGADO" ]; then
 fi
 python manage.py migrate --noinput
 python manage.py garantir_admin
+python manage.py garantir_usuario_anp
 exec "$@"

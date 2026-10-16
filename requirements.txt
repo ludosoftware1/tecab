@@ -2,5 +2,7 @@ Django>=5.2,<6.0
 whitenoise>=6.7
 gunicorn>=23.0
 psycopg[binary]>=3.2
+# Importação/exportação da planilha de movimentação ANP
+openpyxl>=3.1
 # Necessário apenas para regenerar imagens (python manage.py gerar_imagens)
 Pillow>=10.0

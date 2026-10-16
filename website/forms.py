@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.templatetags.static import static
 from django.utils.html import format_html
 
-from .models import Candidatura, MensagemContato, RelatoIntegridade
+from .models import Candidatura, MensagemContato, MovimentacaoANP, ProdutoANP, RelatoIntegridade
 
 OBRIGATORIO = 'Preencha este campo.'
 EMAIL_INVALIDO = 'Informe um e-mail válido, como nome@empresa.com.br.'
@@ -159,3 +159,72 @@ class RecuperarSenhaForm(SiteFormMixin, PasswordResetForm):
             Q(**{'%s__iexact' % email_field: identifier}) | Q(username__iexact=identifier), is_active=True)
         # O save() do PasswordResetForm envia o link para o e-mail cadastrado de cada usuário.
         return (u for u in users if u.has_usable_password() and getattr(u, email_field))
+
+
+# --------------------------------------------------------------------------- Movimentação ANP
+class MovimentacaoForm(forms.ModelForm):
+    """Uma linha do lançamento mensal."""
+
+    volume_m3 = forms.DecimalField(label='Volume (m³)', min_value=0, max_digits=12, decimal_places=3, localize=True,
+                                   widget=forms.TextInput(attrs={'inputmode': 'decimal', 'autocomplete': 'off'}),
+                                   error_messages={'required': 'Informe o volume.', 'invalid': 'Volume inválido.',
+                                                   'min_value': 'O volume não pode ser negativo.'})
+
+    class Meta:
+        model = MovimentacaoANP
+        fields = ['sentido', 'modo_transporte', 'tipo_operacao', 'produto', 'volume_m3']
+        labels = {'sentido': 'Sentido', 'modo_transporte': 'Modal', 'tipo_operacao': 'Tipo', 'produto': 'Produto'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        produtos = ProdutoANP.objects.filter(ativo=True)
+        if self.instance.pk:  # mantém o produto de um lançamento antigo mesmo que tenha sido desativado
+            produtos = ProdutoANP.objects.filter(Q(ativo=True) | Q(pk=self.instance.produto_id))
+        self.fields['produto'].queryset = produtos
+        self.fields['produto'].empty_label = 'Selecione...'
+        for name in ('sentido', 'modo_transporte', 'tipo_operacao'):
+            self.fields[name].choices = [(v, '%s - %s' % (v, r)) for v, r in self.fields[name].choices if v != '']
+        for name, field in self.fields.items():
+            field.error_messages.setdefault('required', OBRIGATORIO)
+            field.widget.attrs['aria-label'] = field.label
+
+    def add_error(self, field, error):
+        super().add_error(field, error)
+        for name in self.errors:
+            if name in self.fields:
+                self.fields[name].widget.attrs['aria-invalid'] = 'true'
+
+
+class BaseLancamentoFormSet(forms.BaseModelFormSet):
+    def clean(self):
+        super().clean()
+        vistos = {}
+        for form in self.forms:
+            if not hasattr(form, 'cleaned_data') or not form.cleaned_data or self._should_delete_form(form):
+                continue
+            d = form.cleaned_data
+            chave = (d.get('sentido'), d.get('tipo_operacao'), d.get('modo_transporte'), d.get('produto'))
+            if None in chave:
+                continue
+            if chave in vistos:
+                form.add_error('produto', 'Combinação repetida (já informada na linha %d). Some os volumes em uma '
+                                          'única linha.' % (vistos[chave] + 1))
+            else:
+                vistos[chave] = self.forms.index(form)
+
+
+class ImportarPlanilhaForm(forms.Form):
+    arquivo = forms.FileField(label='Planilha (.xlsx)', help_text='Layout da ANP: abas "Metadados" e "Dados".',
+                              widget=forms.ClearableFileInput(attrs={'accept': '.xlsx'}),
+                              error_messages={'required': 'Escolha o arquivo da planilha.'})
+    confirmo = forms.BooleanField(label='Entendo que os meses presentes na planilha terão os lançamentos atuais '
+                                        'substituídos pelos da planilha.',
+                                  error_messages={'required': 'Confirme a substituição para continuar.'})
+
+    def clean_arquivo(self):
+        arquivo = self.cleaned_data['arquivo']
+        if not arquivo.name.lower().endswith('.xlsx'):
+            raise forms.ValidationError('Envie a planilha no formato .xlsx.')
+        if arquivo.size > 10 * 1024 * 1024:
+            raise forms.ValidationError('O arquivo é maior que 10 MB.')
+        return arquivo

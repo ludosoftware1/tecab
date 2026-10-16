@@ -61,6 +61,10 @@ services:
       DJANGO_ADMIN_USER: ${DJANGO_ADMIN_USER:-}
       DJANGO_ADMIN_EMAIL: ${DJANGO_ADMIN_EMAIL:-}
       DJANGO_ADMIN_PASSWORD: ${DJANGO_ADMIN_PASSWORD:-}
+      # Usuário inicial do painel de movimentação ANP (/movimentacao-anp/).
+      TECAB_ANP_USER: ${TECAB_ANP_USER:-}
+      TECAB_ANP_EMAIL: ${TECAB_ANP_EMAIL:-}
+      TECAB_ANP_PASSWORD: ${TECAB_ANP_PASSWORD:-}
     volumes:
       # Currículos enviados (/data/media) e o SQLite da versão anterior.
       - tecab2-data:/data

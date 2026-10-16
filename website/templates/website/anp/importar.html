@@ -1,0 +1,46 @@
+{% extends "website/anp/base_anp.html" %}
+{% load static site_tags %}
+{% block title %}Importar planilha | Movimentação ANP | TECAB{% endblock %}
+{% block hero %}{% url 'website:anp_painel' as url_painel %}{% include "website/includes/page_hero.html" with imagem='banner-tanques' titulo='Importar planilha' subtitulo='Carregue uma planilha no layout da ANP para atualizar o histórico de uma só vez.' trilha_pai='Movimentação ANP' trilha_pai_url=url_painel trilha='Importar planilha' compacto=True %}{% endblock %}
+
+{% block bar_nav %}
+<a class="btn btn--sm btn--outline" href="{% url 'website:anp_painel' %}">{% icon 'arrow-left' %}Voltar ao painel</a>
+{% endblock %}
+
+{% block anp_content %}
+<div class="anp-narrow">
+  {% if erros %}
+  <div class="alert alert--error" role="alert">
+    {% icon 'alert' %}
+    <div>
+      <p>A planilha tem {{ total_erros }} linha{{ total_erros|pluralize }} com problema. Nada foi importado.</p>
+      <ul>{% for e in erros %}<li>{{ e }}</li>{% endfor %}</ul>
+      {% if total_erros > erros|length %}<p>Exibindo os {{ erros|length }} primeiros de {{ total_erros }}.</p>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="form-card" novalidate data-enhance>
+    {% csrf_token %}
+    <div class="stack-form">
+      {% include "website/includes/field.html" with field=form.arquivo tipo='file' %}
+      {% include "website/includes/field.html" with field=form.confirmo tipo='check' %}
+      <button type="submit" class="btn btn--block">{% icon 'upload' %}Importar</button>
+    </div>
+  </form>
+
+  <div class="info-box mt-3">
+    {% icon 'sheet' %}
+    <div>
+      <p><strong>Como funciona</strong></p>
+      <ul>
+        <li>Lê a aba <strong>"Dados"</strong>: nomes dos campos na linha 3 e movimentações a partir da linha 4, como no modelo da ANP.</li>
+        <li>Cada mês presente na planilha é <strong>substituído</strong> pelos dados dela; os demais meses ficam como estão.</li>
+        <li>Se alguma linha tiver erro (mês, código ou volume inválido), nada é gravado e as linhas são listadas acima.</li>
+        <li>Produtos que ainda não existem são cadastrados automaticamente.</li>
+      </ul>
+      <p class="mt-0">Para conferir o formato, baixe a <a href="{% url 'website:anp_exportar_xlsx' %}">planilha atual</a>.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

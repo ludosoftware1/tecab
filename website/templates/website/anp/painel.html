@@ -1,0 +1,245 @@
+{% extends "website/anp/base_anp.html" %}
+{% load static site_tags %}
+{% block title %}Movimentação ANP | Gestão | TECAB{% endblock %}
+{% block hero %}{% include "website/includes/page_hero.html" with imagem='banner-tanques' titulo='Movimentação ANP' subtitulo='Histórico mensal dos volumes movimentados no terminal — Resolução ANP nº 881/2022, art. 26, III, d.' trilha='Movimentação ANP' compacto=True %}{% endblock %}
+
+{% block bar_nav %}
+{% if pode_editar %}
+<a class="btn btn--sm" href="{% url 'website:anp_lancamento' %}">{% icon 'sheet' %}Lançar mês</a>
+<a class="btn btn--sm btn--outline" href="{% url 'website:anp_importar' %}">{% icon 'upload' %}Importar planilha</a>
+{% endif %}
+<a class="btn btn--sm btn--outline" href="{% url 'website:anp_exportar_xlsx' %}">{% icon 'download' %}Planilha ANP (.xlsx)</a>
+<a class="btn btn--sm btn--outline" href="{% url 'website:anp_exportar_csv' %}">{% icon 'download' %}CSV</a>
+{% endblock %}
+
+{% block anp_content %}
+<section class="anp-status" aria-label="Situação da publicação">
+  <div class="anp-status__item anp-status__item--{{ situacao.status }}">
+    {% if situacao.status == 'em_dia' %}{% icon 'check-circle' %}{% elif situacao.status == 'pendente' %}{% icon 'clock' %}{% else %}{% icon 'alert' %}{% endif %}
+    <div>
+      <p class="anp-status__label">Publicação mensal</p>
+      {% if situacao.status == 'em_dia' %}
+        <p class="anp-status__value">Em dia</p>
+        <p class="anp-status__note">{{ situacao.mes|date:"m/Y" }} lançado. Próximo: {{ situacao.proximo_mes|date:"m/Y" }} até {{ situacao.proximo_prazo|date:"d/m/Y" }}.</p>
+      {% elif situacao.status == 'pendente' %}
+        <p class="anp-status__value">Pendente</p>
+        <p class="anp-status__note">Lançar {{ situacao.mes|date:"m/Y" }} até {{ situacao.prazo|date:"d/m/Y" }}{% if situacao.dias == 0 %} (vence hoje){% else %} (faltam {{ situacao.dias }} dia{{ situacao.dias|pluralize }}){% endif %}.</p>
+      {% else %}
+        <p class="anp-status__value">Atrasado</p>
+        <p class="anp-status__note">{{ situacao.mes|date:"m/Y" }} deveria ter sido publicado até {{ situacao.prazo|date:"d/m/Y" }}.</p>
+      {% endif %}
+    </div>
+    {% if situacao.status != 'em_dia' and pode_editar %}<a class="btn btn--sm" href="{% url 'website:anp_lancamento_mes' situacao.mes|date:'Y-m' %}">Lançar {{ situacao.mes|date:"m/Y" }}</a>{% endif %}
+  </div>
+  <div class="anp-status__item">
+    {% icon 'clock' %}
+    <div>
+      <p class="anp-status__label">Última atualização</p>
+      <p class="anp-status__value">{{ atualizado_em|date:"d/m/Y"|default:"—" }}</p>
+      <p class="anp-status__note">Data registrada na célula B1 da planilha exportada.</p>
+    </div>
+  </div>
+  <div class="anp-status__item">
+    {% icon 'tank' %}
+    <div>
+      <p class="anp-status__label">Instalação</p>
+      <p class="anp-status__value">{{ terminal.nome|title }}</p>
+      <p class="anp-status__note">Código ANP {{ terminal.codigo_anp }} · {{ terminal.municipio|title }}/{{ terminal.uf }}</p>
+    </div>
+  </div>
+</section>
+
+{% if not dados.linhas %}
+<div class="alert alert--info">{% icon 'alert' %}<p>Ainda não há movimentações cadastradas.{% if pode_editar %} <a href="{% url 'website:anp_lancamento' %}">Lance o primeiro mês</a> ou <a href="{% url 'website:anp_importar' %}">importe a planilha</a>.{% endif %}</p></div>
+{% else %}
+<noscript><div class="alert alert--info"><p>Ative o JavaScript para ver os gráficos e a tabela. A planilha completa pode ser baixada pelos botões acima.</p></div></noscript>
+
+<div class="anp-filters" id="filtros" role="group" aria-label="Filtros do painel">
+  <div class="anp-filter">
+    <label for="f-periodo">Período</label>
+    <select id="f-periodo"></select>
+  </div>
+  <div class="anp-filter" data-custom hidden>
+    <label for="f-de">De</label>
+    <select id="f-de"></select>
+  </div>
+  <div class="anp-filter" data-custom hidden>
+    <label for="f-ate">Até</label>
+    <select id="f-ate"></select>
+  </div>
+  <div class="anp-filter">
+    <label for="f-sentido">Sentido</label>
+    <select id="f-sentido"><option value="">Recepção e entrega</option></select>
+  </div>
+  <div class="anp-filter">
+    <label for="f-modo">Modal</label>
+    <select id="f-modo"><option value="">Todos</option></select>
+  </div>
+  <div class="anp-filter">
+    <label for="f-produto">Produto</label>
+    <select id="f-produto"><option value="">Todos</option></select>
+  </div>
+  <button type="button" class="btn btn--sm btn--ghost" id="f-limpar">Limpar filtros</button>
+  <p class="anp-filters__summary" id="f-resumo" aria-live="polite"></p>
+</div>
+
+<section class="kpis" aria-label="Indicadores do período">
+  <div class="kpi kpi--hero">
+    <p class="kpi__label">Volume movimentado</p>
+    <p class="kpi__value" data-kpi="total"></p>
+    <p class="kpi__delta" data-delta="total"></p>
+    <p class="kpi__note">Recepção + entrega, m³ a 20 °C</p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label"><span class="key key--recepcao" aria-hidden="true"></span>Recebido</p>
+    <p class="kpi__value" data-kpi="recepcao"></p>
+    <p class="kpi__delta" data-delta="recepcao"></p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label"><span class="key key--entrega" aria-hidden="true"></span>Entregue</p>
+    <p class="kpi__value" data-kpi="entrega"></p>
+    <p class="kpi__delta" data-delta="entrega"></p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label">Média mensal movimentada</p>
+    <p class="kpi__value" data-kpi="media"></p>
+    <p class="kpi__note" data-kpi-note="media"></p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label">Último mês do período</p>
+    <p class="kpi__value" data-kpi="ultimo"></p>
+    <p class="kpi__delta" data-delta="ultimo"></p>
+    <p class="kpi__note" data-kpi-note="ultimo"></p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label">Recepção por via aquaviária</p>
+    <p class="kpi__value" data-kpi="aquaviario"></p>
+    <p class="kpi__note">Participação no volume recebido</p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label">Saldo recepção − entrega</p>
+    <p class="kpi__value" data-kpi="saldo"></p>
+    <p class="kpi__note">Positivo: entrou mais do que saiu</p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label">Maior mês</p>
+    <p class="kpi__value" data-kpi="pico"></p>
+    <p class="kpi__note" data-kpi-note="pico"></p>
+  </div>
+</section>
+
+<div class="charts">
+  <section class="chart-card chart-card--wide">
+    <header><h2>Recepção e entrega por mês</h2><p>Volume mensal em m³. Use a roda do mouse ou a barra inferior para aproximar.</p></header>
+    <div class="chart chart--tall" id="c-evolucao" role="img" aria-label="Gráfico de colunas com o volume recebido e entregue em cada mês"></div>
+  </section>
+  <section class="chart-card">
+    <header><h2>Tendência</h2><p>Movimentação mensal e média móvel de 12 meses.</p></header>
+    <div class="chart" id="c-tendencia" role="img" aria-label="Linha da movimentação mensal com a média móvel de 12 meses"></div>
+  </section>
+  <section class="chart-card">
+    <header><h2>Saldo mensal</h2><p>Recepção menos entrega: acima de zero, o estoque tende a subir.</p></header>
+    <div class="chart" id="c-saldo" role="img" aria-label="Colunas do saldo mensal entre recepção e entrega"></div>
+  </section>
+  <section class="chart-card chart-card--wide">
+    <header><h2>Volume por produto</h2><p>Composição mensal do volume movimentado.</p></header>
+    <div class="chart chart--tall" id="c-produtos" role="img" aria-label="Colunas empilhadas do volume mensal por produto"></div>
+  </section>
+  <section class="chart-card">
+    <header><h2>Mix de produtos</h2><p>Participação de cada produto no período.</p></header>
+    <div class="chart chart--tall" id="c-mix" role="img" aria-label="Barras horizontais com o volume e a participação de cada produto"></div>
+  </section>
+  <section class="chart-card">
+    <header><h2>Fluxo do terminal</h2><p>Como cada produto chega e sai: modal de recepção → produto → modal de entrega.</p></header>
+    <div class="chart chart--tall" id="c-fluxo" role="img" aria-label="Diagrama de fluxo entre modais de recepção, produtos e modais de entrega"></div>
+  </section>
+  <section class="chart-card">
+    <header><h2>Dependência da via aquaviária</h2><p>Parcela do volume recebido que chegou por navio, mês a mês.</p></header>
+    <div class="chart" id="c-aquaviario" role="img" aria-label="Linha com o percentual da recepção feita por via aquaviária"></div>
+  </section>
+  <section class="chart-card">
+    <header><h2>Média mensal por ano</h2><p>Todo o histórico. A média por mês lançado permite comparar anos completos e parciais.</p></header>
+    <div class="chart" id="c-anual" role="img" aria-label="Colunas com a média mensal movimentada em cada ano"></div>
+  </section>
+  <section class="chart-card chart-card--wide">
+    <header><h2>Sazonalidade</h2><p>Volume movimentado por mês e ano — quanto mais escuro, maior o volume. Considera todo o histórico (os filtros de sentido, modal e produto se aplicam).</p></header>
+    <div class="chart" id="c-sazonalidade" role="img" aria-label="Mapa de calor do volume movimentado por mês e ano"></div>
+  </section>
+</div>
+{% endif %}
+
+{% if avisos %}
+<section class="anp-section" aria-labelledby="avisos-titulo">
+  <h2 id="avisos-titulo">Pontos de atenção <span class="badge">{{ avisos|length }}</span></h2>
+  <p class="muted">Situações que merecem conferência antes da publicação. Elas não impedem a exportação.</p>
+  <ul class="avisos">
+    {% for a in avisos %}
+    <li class="aviso">
+      {% icon 'alert' %}
+      <span><strong>{{ a.mes|date:"m/Y" }}</strong> · {{ a.texto }}</span>
+      {% if pode_editar %}<a href="{% url 'website:anp_lancamento_mes' a.mes|date:'Y-m' %}">Revisar<span class="visually-hidden"> {{ a.mes|date:"m/Y" }}</span></a>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if dados.linhas %}
+<section class="anp-section" id="tabela" aria-labelledby="tabela-titulo" tabindex="-1"{% if pode_editar %} data-lancamento="{% url 'website:anp_lancamento' %}"{% endif %}>
+  <div class="anp-section__head">
+    <h2 id="tabela-titulo">Dados</h2>
+    <div class="seg" role="tablist" aria-label="Visão da tabela" data-anp-tabs>
+      <button type="button" role="tab" id="tab-lanc" aria-controls="painel-lanc" aria-selected="true">Lançamentos</button>
+      <button type="button" role="tab" id="tab-resumo" aria-controls="painel-resumo" aria-selected="false" tabindex="-1">Resumo mensal</button>
+    </div>
+  </div>
+  <p class="muted">A tabela segue os filtros acima.</p>
+
+  <div role="tabpanel" id="painel-lanc" aria-labelledby="tab-lanc">
+    <div class="table-wrap">
+      <table class="data-table" id="t-lanc">
+        <caption class="visually-hidden">Lançamentos de movimentação no período filtrado</caption>
+        <thead>
+          <tr>
+            <th scope="col" aria-sort="descending"><button type="button" data-sort="mes">Mês</button></th>
+            <th scope="col"><button type="button" data-sort="sentido">Sentido</button></th>
+            <th scope="col"><button type="button" data-sort="modo">Modal</button></th>
+            <th scope="col"><button type="button" data-sort="tipo">Tipo</button></th>
+            <th scope="col"><button type="button" data-sort="produto">Produto</button></th>
+            <th scope="col" class="num"><button type="button" data-sort="volume">Volume (m³)</button></th>
+            {% if pode_editar %}<th scope="col"><span class="visually-hidden">Ações</span></th>{% endif %}
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot><tr><th scope="row" colspan="5">Total filtrado</th><td class="num" data-total></td>{% if pode_editar %}<td></td>{% endif %}</tr></tfoot>
+      </table>
+    </div>
+    <div class="pager" data-pager>
+      <button type="button" class="btn btn--sm btn--outline" data-page="-1">{% icon 'arrow-left' %}Anterior</button>
+      <span data-page-info aria-live="polite"></span>
+      <button type="button" class="btn btn--sm btn--outline" data-page="1">Próxima{% icon 'arrow-right' %}</button>
+    </div>
+  </div>
+
+  <div role="tabpanel" id="painel-resumo" aria-labelledby="tab-resumo" hidden>
+    <div class="table-wrap">
+      <table class="data-table" id="t-resumo">
+        <caption class="visually-hidden">Resumo mensal por produto no período filtrado (m³)</caption>
+        <thead></thead>
+        <tbody></tbody>
+        <tfoot></tfoot>
+      </table>
+    </div>
+  </div>
+</section>
+{{ dados|json_script:"anp-dados" }}
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if dados.linhas %}
+<script src="{% static 'vendor/echarts/echarts.min.js' %}"></script>
+<script src="{% static 'vendor/echarts/langPT-br.js' %}"></script>
+<script src="{% static 'js/painel-anp.js' %}"></script>
+{% endif %}
+{% endblock %}

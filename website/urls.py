@@ -1,7 +1,7 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from . import views
+from . import views, views_anp
 
 app_name = 'website'
 
@@ -23,6 +23,14 @@ urlpatterns = [
     path('recuperar-senha/enviado/', views.RecuperarSenhaEnviadoView.as_view(), name='recuperar_senha_enviado'),
     path('redefinir-senha/<uidb64>/<token>/', views.RedefinirSenhaView.as_view(), name='redefinir_senha'),
     path('redefinir-senha/concluido/', views.RedefinirSenhaConcluidoView.as_view(), name='redefinir_senha_concluido'),
+
+    # Gestão do histórico de movimentação ANP: sem link no menu, acesso pelo endereço direto.
+    path('movimentacao-anp/', views_anp.painel, name='anp_painel'),
+    path('movimentacao-anp/lancamento/', views_anp.lancamento, name='anp_lancamento'),
+    path('movimentacao-anp/lancamento/<str:mes>/', views_anp.lancamento, name='anp_lancamento_mes'),
+    path('movimentacao-anp/importar/', views_anp.importar, name='anp_importar'),
+    path('movimentacao-anp/exportar.xlsx', views_anp.exportar_xlsx, name='anp_exportar_xlsx'),
+    path('movimentacao-anp/exportar.csv', views_anp.exportar_csv, name='anp_exportar_csv'),
 
     # Endereços do antigo portfólio (conteúdo de demonstração do tema WordPress)
     path('portfolio/<slug:slug>/', views.legacy_portfolio),

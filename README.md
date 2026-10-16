@@ -64,9 +64,30 @@ As imagens são servidas em WebP responsivo (várias larguras), geradas a partir
 | `/contato/` | Telefones por setor, e-mails, horários, formulários "Fale conosco" e "Trabalhe conosco", mapa |
 | `/canal-de-integridade/` | Relatos anônimos (ou identificados) com número de protocolo |
 | `/area-do-colaborador/` | Área restrita: login por usuário ou e-mail, cadastro, recuperação e troca de senha |
+| `/movimentacao-anp/` | Gestão do histórico de movimentação ANP (restrita, sem link no menu — ver abaixo) |
 | `/sitemap.xml`, `/robots.txt` | SEO |
 
 Os endereços antigos do WordPress (`?page_id=`, `?p=`, `?portfolio-item=`...) redirecionam (301) para as novas rotas.
+
+## Gestão da movimentação ANP
+
+Painel em `/movimentacao-anp/` para manter o histórico mensal exigido pela Resolução ANP nº 881/2022
+(art. 26, III, d). **Não há link no menu**: o acesso é pelo endereço direto, para validação antes da divulgação.
+
+- **Acesso:** só usuários do grupo **Gestão ANP** (ou superusuários). Qualquer outra conta recebe "Acesso não
+  autorizado". O usuário inicial vem do `.env` (`TECAB_ANP_USER` / `TECAB_ANP_PASSWORD` / `TECAB_ANP_EMAIL`)
+  e é criado/atualizado a cada inicialização do container (`manage.py garantir_usuario_anp`). Para autorizar
+  outras pessoas, inclua as contas delas no grupo pelo `/admin/`.
+- **Painel:** indicadores do período (volume movimentado, recebido, entregue, comparação com o ano anterior,
+  média mensal, participação aquaviária, saldo), gráficos em Apache ECharts (`static/vendor/echarts`), pontos de
+  atenção (duplicidades, meses sem lançamento) e tabela filtrável com resumo mensal.
+- **Lançamento mensal:** `/movimentacao-anp/lancamento/` abre o mês seguinte ao último lançado, já com as
+  combinações do mês anterior. Prazo de publicação: dia 15 do mês seguinte (o painel avisa quando está pendente).
+- **Importar/exportar:** importa `.xlsx` no layout da ANP (substitui os meses presentes na planilha) e exporta a
+  planilha pronta para publicação (modelo em `website/data/modelo-movimentacao-anp.xlsx`) ou CSV.
+  Pela linha de comando: `python manage.py importar_movimentacoes_anp planilha.xlsx`.
+- **Carga inicial:** a migration `website.0005` carrega o histórico de 09/2022 a 09/2026
+  (`website/data/movimentacoes-anp-inicial.csv`, extraído da planilha publicada no Google Planilhas).
 
 Os formulários gravam no banco (visível no admin) e enviam e-mail para os destinatários configurados
 em `TECAB_CONTATO_FALE_DESTINATARIOS` (Fale Conosco), `TECAB_CONTATO_TRABALHE_DESTINATARIOS`

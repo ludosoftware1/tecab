@@ -1,0 +1,21 @@
+{% extends "website/base.html" %}
+{% load site_tags %}
+{% block title %}Acesso não autorizado | TECAB{% endblock %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+{% include "website/includes/page_hero.html" with imagem='banner-porto' titulo='Acesso não autorizado' subtitulo='Sua conta não tem permissão para abrir esta página.' trilha='Erro 403' compacto=True %}
+<section class="section">
+  <div class="container--narrow text-center">
+    <p class="lead">{% if user.is_authenticated %}Você está conectado como <strong>{{ user.get_username }}</strong>. {% endif %}Se precisa deste acesso, peça ao administrador do site para incluir sua conta no grupo autorizado.</p>
+    <div class="btn-group" style="justify-content:center">
+      <a class="btn" href="{% url 'website:area_colaborador' %}">Área do Colaborador</a>
+      {% if user.is_authenticated %}
+      <form method="post" action="{% url 'website:logout' %}" style="margin:0">
+        {% csrf_token %}
+        <button type="submit" class="btn btn--outline">{% icon 'logout' %}Entrar com outra conta</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}
