@@ -1,4 +1,7 @@
-"""Gestão do histórico de movimentação ANP (área restrita, acessível apenas pelo link direto)."""
+"""Histórico de movimentação ANP: gestão (área restrita) e página pública somente leitura.
+
+Nenhuma das duas tem link no menu do site por enquanto; o acesso é pelo endereço direto.
+"""
 import csv
 
 from django.contrib import messages
@@ -143,22 +146,70 @@ def _nome_arquivo(extensao):
     return 'historico-movimentacao-tecab-%s.%s' % (timezone.localdate().strftime('%Y-%m-%d'), extensao)
 
 
-@require_GET
-@restrito(VER)
-def exportar_xlsx(request):
+def _planilha_xlsx():
     response = HttpResponse(anp.exportar_xlsx(),
                             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename="%s"' % _nome_arquivo('xlsx')
-    return _sem_indexacao(response)
+    return response
 
 
-@require_GET
-@restrito(VER)
-def exportar_csv(request):
+def _planilha_csv():
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="%s"' % _nome_arquivo('csv')
     response.write('﻿')  # BOM: o Excel reconhece o UTF-8
     writer = csv.writer(response, delimiter=';')
     for linha in anp.linhas_csv():
         writer.writerow(linha)
-    return _sem_indexacao(response)
+    return response
+
+
+@require_GET
+@restrito(VER)
+def exportar_xlsx(request):
+    return _sem_indexacao(_planilha_xlsx())
+
+
+@require_GET
+@restrito(VER)
+def exportar_csv(request):
+    return _sem_indexacao(_planilha_csv())
+
+
+# --------------------------------------------------------------------------- página pública
+# Ainda sem link no menu e fora do sitemap/indexação, até a validação da TECAB. Para divulgar: incluir o botão em
+# informacoes_anp.html, apagar NAO_INDEXAR_PUBLICO e o bloco robots de historico_publico.html, e incluir a rota
+# no sitemap.
+NAO_INDEXAR_PUBLICO = True
+
+
+def _publico(response):
+    if NAO_INDEXAR_PUBLICO:
+        response['X-Robots-Tag'] = 'noindex'
+    return response
+
+
+@require_GET
+def historico_publico(request):
+    """Gráficos e tabelas do histórico de movimentação, somente leitura e sem login."""
+    movimentacoes = list(MovimentacaoANP.objects.select_related('produto'))
+    produtos = list(ProdutoANP.objects.order_by('pk'))
+    meses = [m.mes_referencia for m in movimentacoes]
+    return _publico(render(request, 'website/anp/historico_publico.html', {
+        'dados': anp.dados_painel(movimentacoes, produtos),
+        'atualizado_em': anp.data_atualizacao(),
+        'terminal': anp.TERMINAL,
+        'primeiro_mes': min(meses) if meses else None,
+        'ultimo_mes': max(meses) if meses else None,
+        'sentidos': MovimentacaoANP.SENTIDOS, 'tipos': MovimentacaoANP.TIPOS, 'modos': MovimentacaoANP.MODOS,
+        'pode_editar': False,
+    }))
+
+
+@require_GET
+def historico_publico_xlsx(request):
+    return _publico(_planilha_xlsx())
+
+
+@require_GET
+def historico_publico_csv(request):
+    return _publico(_planilha_csv())

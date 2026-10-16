@@ -306,6 +306,31 @@ class MovimentacaoANPTests(TestCase):
         self.assertEqual((s['status'], s['mes'], s['dias']), ('pendente', datetime.date(2026, 10, 1), 5))
         self.assertEqual(anp.situacao_publicacao(datetime.date(2026, 11, 16))['status'], 'atrasado')
 
+    def test_pagina_publica(self):
+        url = reverse('website:historico_movimentacao')
+        r = self.client.get(url)  # sem login
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, 'id="anp-dados"')
+        self.assertContains(r, 'Sobre os dados')
+        self.assertContains(r, '02/10/2026')
+        self.assertContains(r, '09/2022 a 09/2026')
+        # somente leitura: sem ações de edição, pontos de atenção ou área interna
+        for trecho in ('Editar mês', 'data-lancamento', 'Pontos de atenção', 'Lançamento mensal', 'Sair'):
+            self.assertNotContains(r, trecho)
+        # ainda não divulgada: fora do menu, do sitemap e dos buscadores
+        self.assertEqual(r['X-Robots-Tag'], 'noindex')
+        for pagina in (reverse('website:home'), reverse('website:informacoes_anp'), '/sitemap.xml'):
+            self.assertNotContains(self.client.get(pagina), url)
+        xlsx = self.client.get(reverse('website:historico_movimentacao_xlsx'))
+        self.assertEqual(len(anp.ler_xlsx(io.BytesIO(xlsx.content))[0]), 735)
+        self.assertContains(self.client.get(reverse('website:historico_movimentacao_csv')), 'ETANOL ANIDRO')
+
+    def test_menu_interno(self):
+        self.entrar()
+        r = self.client.get(reverse('website:anp_lancamento_mes', args=['2026-09']))
+        self.assertContains(r, 'aria-current="page"><svg class="icon " aria-hidden="true" focusable="false"><use href="#i-sheet"></use></svg>Lançamento mensal')
+        self.assertContains(r, reverse('website:historico_movimentacao'))
+
     def test_comando_do_usuario_inicial(self):
         self.assertTrue(self.gestor.has_perms(['website.view_movimentacaoanp', 'website.add_movimentacaoanp',
                                                'website.change_movimentacaoanp', 'website.delete_movimentacaoanp']))

@@ -1,0 +1,49 @@
+{% load site_tags %}{% comment %}
+Tabela de lançamentos e resumo mensal. Com pode_editar, cada linha ganha o link "Editar mês".
+{% endcomment %}<section class="anp-section" id="tabela" aria-labelledby="tabela-titulo" tabindex="-1"{% if pode_editar %} data-lancamento="{% url 'website:anp_lancamento' %}"{% endif %}>
+  <div class="anp-section__head">
+    <h2 id="tabela-titulo">Dados</h2>
+    <div class="seg" role="tablist" aria-label="Visão da tabela" data-anp-tabs>
+      <button type="button" role="tab" id="tab-lanc" aria-controls="painel-lanc" aria-selected="true">Lançamentos</button>
+      <button type="button" role="tab" id="tab-resumo" aria-controls="painel-resumo" aria-selected="false" tabindex="-1">Resumo mensal</button>
+    </div>
+  </div>
+  <p class="muted">A tabela segue os filtros acima.</p>
+
+  <div role="tabpanel" id="painel-lanc" aria-labelledby="tab-lanc">
+    <div class="table-wrap">
+      <table class="data-table" id="t-lanc">
+        <caption class="visually-hidden">Lançamentos de movimentação no período filtrado</caption>
+        <thead>
+          <tr>
+            <th scope="col" aria-sort="descending"><button type="button" data-sort="mes">Mês</button></th>
+            <th scope="col"><button type="button" data-sort="sentido">Sentido</button></th>
+            <th scope="col"><button type="button" data-sort="modo">Modal</button></th>
+            <th scope="col"><button type="button" data-sort="tipo">Tipo</button></th>
+            <th scope="col"><button type="button" data-sort="produto">Produto</button></th>
+            <th scope="col" class="num"><button type="button" data-sort="volume">Volume (m³)</button></th>
+            {% if pode_editar %}<th scope="col"><span class="visually-hidden">Ações</span></th>{% endif %}
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot><tr><th scope="row" colspan="5">Total filtrado</th><td class="num" data-total></td>{% if pode_editar %}<td></td>{% endif %}</tr></tfoot>
+      </table>
+    </div>
+    <div class="pager" data-pager>
+      <button type="button" class="btn btn--sm btn--outline" data-page="-1">{% icon 'arrow-left' %}Anterior</button>
+      <span data-page-info aria-live="polite"></span>
+      <button type="button" class="btn btn--sm btn--outline" data-page="1">Próxima{% icon 'arrow-right' %}</button>
+    </div>
+  </div>
+
+  <div role="tabpanel" id="painel-resumo" aria-labelledby="tab-resumo" hidden>
+    <div class="table-wrap">
+      <table class="data-table" id="t-resumo">
+        <caption class="visually-hidden">Resumo mensal por produto no período filtrado (m³)</caption>
+        <thead></thead>
+        <tbody></tbody>
+        <tfoot></tfoot>
+      </table>
+    </div>
+  </div>
+</section>

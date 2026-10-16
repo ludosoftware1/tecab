@@ -3,10 +3,6 @@
 {% block title %}Lançamento {{ mes|date:"m/Y" }} | Movimentação ANP | TECAB{% endblock %}
 {% block hero %}{% url 'website:anp_painel' as url_painel %}{% include "website/includes/page_hero.html" with imagem='banner-tanques' titulo='Lançamento mensal' subtitulo='Volumes do mês em m³ a 20 °C, um por combinação de sentido, modal, tipo de operação e produto.' trilha_pai='Movimentação ANP' trilha_pai_url=url_painel trilha='Lançamento mensal' compacto=True %}{% endblock %}
 
-{% block bar_nav %}
-<a class="btn btn--sm btn--outline" href="{% url 'website:anp_painel' %}">{% icon 'arrow-left' %}Voltar ao painel</a>
-{% endblock %}
-
 {% block anp_content %}
 <div class="mes-nav">
   <a class="btn btn--sm btn--ghost" href="{% url 'website:anp_lancamento_mes' anterior|date:'Y-m' %}">{% icon 'arrow-left' %}<span>{{ anterior|date:"m/Y" }}</span></a>

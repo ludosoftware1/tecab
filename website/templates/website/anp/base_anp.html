@@ -7,17 +7,26 @@
 {% block hero %}{% endblock %}
 <div class="anp">
   <div class="anp__container">
-    <div class="anp-bar">
-      <p class="anp-bar__user">{% icon 'user' %}<span>{{ user.get_full_name|default:user.get_username }}</span></p>
-      <nav class="anp-bar__nav" aria-label="Gestão da movimentação ANP">
-        {% block bar_nav %}{% endblock %}
+    <div class="anp-top">
+      <nav class="anp-nav" aria-label="Gestão da movimentação ANP">
+        <a href="{% url 'website:anp_painel' %}"{% if current_url_name == 'anp_painel' %} aria-current="page"{% endif %}>{% icon 'chart' %}Painel</a>
+        {% if perms.website.add_movimentacaoanp %}
+        <a href="{% url 'website:anp_lancamento' %}"{% if current_url_name == 'anp_lancamento' or current_url_name == 'anp_lancamento_mes' %} aria-current="page"{% endif %}>{% icon 'sheet' %}Lançamento mensal</a>
+        <a href="{% url 'website:anp_importar' %}"{% if current_url_name == 'anp_importar' %} aria-current="page"{% endif %}>{% icon 'upload' %}Importar planilha</a>
+        {% endif %}
+        <a href="{% url 'website:historico_movimentacao' %}" target="_blank" rel="noopener">{% icon 'external' %}Página pública<span class="visually-hidden"> (abre em nova aba)</span></a>
+        {% if user.is_staff %}<a href="{% url 'admin:index' %}">{% icon 'lock' %}Administração</a>{% endif %}
+      </nav>
+      <div class="anp-top__user">
+        <span>{% icon 'user' %}{{ user.get_full_name|default:user.get_username }}</span>
         <form method="post" action="{% url 'website:logout' %}">
           {% csrf_token %}
           <button type="submit" class="btn btn--sm btn--ghost">{% icon 'logout' %}Sair</button>
         </form>
-      </nav>
+      </div>
     </div>
     {% include "website/includes/messages.html" %}
+    <div class="anp-actions">{% block acoes %}{% endblock %}</div>
     {% block anp_content %}{% endblock %}
   </div>
 </div>

@@ -65,6 +65,7 @@ As imagens são servidas em WebP responsivo (várias larguras), geradas a partir
 | `/canal-de-integridade/` | Relatos anônimos (ou identificados) com número de protocolo |
 | `/area-do-colaborador/` | Área restrita: login por usuário ou e-mail, cadastro, recuperação e troca de senha |
 | `/movimentacao-anp/` | Gestão do histórico de movimentação ANP (restrita, sem link no menu — ver abaixo) |
+| `/informacoes-anp/historico-de-movimentacao/` | Histórico de movimentação público: gráficos, tabelas e download (sem link no menu, em validação) |
 | `/sitemap.xml`, `/robots.txt` | SEO |
 
 Os endereços antigos do WordPress (`?page_id=`, `?p=`, `?portfolio-item=`...) redirecionam (301) para as novas rotas.
@@ -86,6 +87,11 @@ Painel em `/movimentacao-anp/` para manter o histórico mensal exigido pela Reso
 - **Importar/exportar:** importa `.xlsx` no layout da ANP (substitui os meses presentes na planilha) e exporta a
   planilha pronta para publicação (modelo em `website/data/modelo-movimentacao-anp.xlsx`) ou CSV.
   Pela linha de comando: `python manage.py importar_movimentacoes_anp planilha.xlsx`.
+- **Página pública:** `/informacoes-anp/historico-de-movimentacao/` mostra os mesmos gráficos e tabelas, sem login,
+  sem edição e sem os pontos de atenção, com download da planilha e do CSV. Enquanto está em validação, não tem link
+  no menu e fica fora do sitemap e dos buscadores. Para divulgar: incluir o botão em `informacoes_anp.html`, retirar
+  o `noindex` (`NAO_INDEXAR_PUBLICO` em `website/views_anp.py` e o bloco `robots` de `historico_publico.html`) e
+  incluir a rota no sitemap.
 - **Carga inicial:** a migration `website.0005` carrega o histórico de 09/2022 a 09/2026
   (`website/data/movimentacoes-anp-inicial.csv`, extraído da planilha publicada no Google Planilhas).
 

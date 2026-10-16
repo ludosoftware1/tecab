@@ -17,12 +17,32 @@
 .anp .btn--ghost:hover { --btn-bg: #fff; --btn-fg: var(--red-600); --btn-border: var(--line); }
 .anp h2 { font-size: 1.15rem; letter-spacing: -.01em; }
 
-/* barra de ações */
-.anp-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; margin-bottom: 1.5rem; }
-.anp-bar__user { display: inline-flex; align-items: center; gap: .5rem; margin: 0; font-weight: 700; color: var(--ink-900); }
-.anp-bar__user .icon { color: var(--red-600); }
-.anp-bar__nav { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
-.anp-bar__nav form { margin: 0; }
+/* menu da área interna */
+.anp-top {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .4rem .5rem .4rem .4rem;
+  margin-bottom: 1rem; box-shadow: var(--shadow-sm);
+}
+.anp-nav { display: flex; flex-wrap: wrap; gap: .25rem; }
+.anp-nav a {
+  display: inline-flex; align-items: center; gap: .45rem; min-height: 40px; padding: .4rem .9rem; border-radius: 8px;
+  font-weight: 800; font-size: .93rem; color: var(--ink-700); text-decoration: none;
+}
+.anp-nav a .icon { width: 1.1em; height: 1.1em; color: var(--ink-400); }
+.anp-nav a:hover { background: var(--bg-soft); color: var(--ink-900); }
+.anp-nav a[aria-current="page"] { background: var(--red-50); color: var(--red-700); }
+.anp-nav a[aria-current="page"] .icon { color: var(--red-600); }
+.anp-top__user { display: flex; align-items: center; gap: .5rem; font-weight: 700; color: var(--ink-900); font-size: .93rem; }
+.anp-top__user > span { display: inline-flex; align-items: center; gap: .4rem; }
+.anp-top__user > span .icon { color: var(--red-600); }
+.anp-top__user form { margin: 0; }
+.anp-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .5rem; margin-bottom: 1rem; }
+.anp-actions:empty { display: none; }
+@media (max-width: 640px) {
+  .anp-nav { width: 100%; }
+  .anp-nav a { flex: 1 1 auto; justify-content: center; }
+  .anp-top__user { width: 100%; justify-content: space-between; padding: 0 .5rem; }
+}
 
 /* situação da publicação */
 .anp-status { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
@@ -40,7 +60,21 @@
 .anp-status__label { margin: 0; font-size: .82rem; font-weight: 700; color: var(--ink-500); text-transform: uppercase; letter-spacing: .04em; }
 .anp-status__value { margin: 0; font-size: 1.25rem; font-weight: 800; color: var(--ink-900); line-height: 1.3; }
 .anp-status__note { margin: .15rem 0 0; font-size: .88rem; color: var(--ink-500); line-height: 1.45; }
-@media (max-width: 980px) { .anp-status { grid-template-columns: 1fr; } }
+.anp-status--publico { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.anp-status__links { display: flex; flex-wrap: wrap; gap: .4rem; margin: .35rem 0 .1rem; }
+.anp-status__links .btn { min-height: 36px; padding: .35rem .9rem; font-size: .88rem; }
+@media (max-width: 1180px) { .anp-status--publico { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 980px) { .anp-status { grid-template-columns: 1fr; } .anp-status--publico { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .anp-status--publico { grid-template-columns: 1fr; } }
+
+/* glossário da página pública */
+.glossario { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin: 0 0 1rem; }
+.glossario > div { background: var(--bg-soft); border-radius: 8px; padding: .85rem 1rem; }
+.glossario dt { font-weight: 800; color: var(--ink-900); font-size: .92rem; margin-bottom: .35rem; }
+.glossario dd { margin: 0; display: grid; gap: .15rem; font-size: .9rem; }
+.glossario dd strong { display: inline-block; min-width: 1.2em; }
+@media (max-width: 980px) { .glossario { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .glossario { grid-template-columns: 1fr; } }
 
 /* filtros: uma linha acima de tudo o que eles afetam */
 .anp-filters {

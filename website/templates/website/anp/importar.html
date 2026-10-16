@@ -3,10 +3,6 @@
 {% block title %}Importar planilha | Movimentação ANP | TECAB{% endblock %}
 {% block hero %}{% url 'website:anp_painel' as url_painel %}{% include "website/includes/page_hero.html" with imagem='banner-tanques' titulo='Importar planilha' subtitulo='Carregue uma planilha no layout da ANP para atualizar o histórico de uma só vez.' trilha_pai='Movimentação ANP' trilha_pai_url=url_painel trilha='Importar planilha' compacto=True %}{% endblock %}
 
-{% block bar_nav %}
-<a class="btn btn--sm btn--outline" href="{% url 'website:anp_painel' %}">{% icon 'arrow-left' %}Voltar ao painel</a>
-{% endblock %}
-
 {% block anp_content %}
 <div class="anp-narrow">
   {% if erros %}

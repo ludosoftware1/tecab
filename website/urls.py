@@ -9,6 +9,12 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('quem-somos/', views.quem_somos, name='quem_somos'),
     path('informacoes-anp/', views.informacoes_anp, name='informacoes_anp'),
+    # Histórico de movimentação (público, somente leitura). Ainda sem link no menu.
+    path('informacoes-anp/historico-de-movimentacao/', views_anp.historico_publico, name='historico_movimentacao'),
+    path('informacoes-anp/historico-de-movimentacao/historico-movimentacao.xlsx', views_anp.historico_publico_xlsx,
+         name='historico_movimentacao_xlsx'),
+    path('informacoes-anp/historico-de-movimentacao/historico-movimentacao.csv', views_anp.historico_publico_csv,
+         name='historico_movimentacao_csv'),
     path('contato/', views.contato, name='contato'),
     path('canal-de-integridade/', views.canal_integridade, name='canal_integridade'),
     path('canal-de-integridade/enviado/', views.canal_integridade_enviado, name='canal_integridade_enviado'),
