@@ -1,0 +1,115 @@
+{% load site_tags %}{% comment %}
+Filtros, indicadores e gráficos do histórico de movimentação (painel interno e página pública).
+Os dados vêm de {{ dados|json_script:"anp-dados" }}; quem desenha tudo é static/js/painel-anp.js.
+{% endcomment %}<div class="anp-filters" id="filtros" role="group" aria-label="Filtros do painel">
+  <div class="anp-filter">
+    <label for="f-periodo">Período</label>
+    <select id="f-periodo"></select>
+  </div>
+  <div class="anp-filter" data-custom hidden>
+    <label for="f-de">De</label>
+    <select id="f-de"></select>
+  </div>
+  <div class="anp-filter" data-custom hidden>
+    <label for="f-ate">Até</label>
+    <select id="f-ate"></select>
+  </div>
+  <div class="anp-filter">
+    <label for="f-sentido">Sentido</label>
+    <select id="f-sentido"><option value="">Recepção e entrega</option></select>
+  </div>
+  <div class="anp-filter">
+    <label for="f-modo">Modal</label>
+    <select id="f-modo"><option value="">Todos</option></select>
+  </div>
+  <div class="anp-filter">
+    <label for="f-produto">Produto</label>
+    <select id="f-produto"><option value="">Todos</option></select>
+  </div>
+  <button type="button" class="btn btn--sm btn--ghost" id="f-limpar">Limpar filtros</button>
+  <p class="anp-filters__summary" id="f-resumo" aria-live="polite"></p>
+</div>
+
+<section class="kpis" aria-label="Indicadores do período">
+  <div class="kpi kpi--hero">
+    <p class="kpi__label">Volume movimentado</p>
+    <p class="kpi__value" data-kpi="total"></p>
+    <p class="kpi__delta" data-delta="total"></p>
+    <p class="kpi__note">Recepção + entrega, m³ a 20 °C</p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label"><span class="key key--recepcao" aria-hidden="true"></span>Recebido</p>
+    <p class="kpi__value" data-kpi="recepcao"></p>
+    <p class="kpi__delta" data-delta="recepcao"></p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label"><span class="key key--entrega" aria-hidden="true"></span>Entregue</p>
+    <p class="kpi__value" data-kpi="entrega"></p>
+    <p class="kpi__delta" data-delta="entrega"></p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label">Média mensal movimentada</p>
+    <p class="kpi__value" data-kpi="media"></p>
+    <p class="kpi__note" data-kpi-note="media"></p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label">Último mês do período</p>
+    <p class="kpi__value" data-kpi="ultimo"></p>
+    <p class="kpi__delta" data-delta="ultimo"></p>
+    <p class="kpi__note" data-kpi-note="ultimo"></p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label">Recepção por via aquaviária</p>
+    <p class="kpi__value" data-kpi="aquaviario"></p>
+    <p class="kpi__note">Participação no volume recebido</p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label">Saldo recepção − entrega</p>
+    <p class="kpi__value" data-kpi="saldo"></p>
+    <p class="kpi__note">Positivo: entrou mais do que saiu</p>
+  </div>
+  <div class="kpi">
+    <p class="kpi__label">Maior mês</p>
+    <p class="kpi__value" data-kpi="pico"></p>
+    <p class="kpi__note" data-kpi-note="pico"></p>
+  </div>
+</section>
+
+<div class="charts">
+  <section class="chart-card chart-card--wide">
+    <header><h2>Recepção e entrega por mês</h2><p>Volume mensal em m³. Use a roda do mouse ou a barra inferior para aproximar.</p></header>
+    <div class="chart chart--tall" id="c-evolucao" role="img" aria-label="Gráfico de colunas com o volume recebido e entregue em cada mês"></div>
+  </section>
+  <section class="chart-card">
+    <header><h2>Tendência</h2><p>Movimentação mensal e média móvel de 12 meses.</p></header>
+    <div class="chart" id="c-tendencia" role="img" aria-label="Linha da movimentação mensal com a média móvel de 12 meses"></div>
+  </section>
+  <section class="chart-card">
+    <header><h2>Saldo mensal</h2><p>Recepção menos entrega: acima de zero, o estoque tende a subir.</p></header>
+    <div class="chart" id="c-saldo" role="img" aria-label="Colunas do saldo mensal entre recepção e entrega"></div>
+  </section>
+  <section class="chart-card chart-card--wide">
+    <header><h2>Volume por produto</h2><p>Composição mensal do volume movimentado.</p></header>
+    <div class="chart chart--tall" id="c-produtos" role="img" aria-label="Colunas empilhadas do volume mensal por produto"></div>
+  </section>
+  <section class="chart-card">
+    <header><h2>Mix de produtos</h2><p>Participação de cada produto no período.</p></header>
+    <div class="chart chart--tall" id="c-mix" role="img" aria-label="Barras horizontais com o volume e a participação de cada produto"></div>
+  </section>
+  <section class="chart-card">
+    <header><h2>Fluxo do terminal</h2><p>Como cada produto chega e sai: modal de recepção → produto → modal de entrega.</p></header>
+    <div class="chart chart--tall" id="c-fluxo" role="img" aria-label="Diagrama de fluxo entre modais de recepção, produtos e modais de entrega"></div>
+  </section>
+  <section class="chart-card">
+    <header><h2>Dependência da via aquaviária</h2><p>Parcela do volume recebido que chegou por navio, mês a mês.</p></header>
+    <div class="chart" id="c-aquaviario" role="img" aria-label="Linha com o percentual da recepção feita por via aquaviária"></div>
+  </section>
+  <section class="chart-card">
+    <header><h2>Média mensal por ano</h2><p>Todo o histórico. A média por mês lançado permite comparar anos completos e parciais.</p></header>
+    <div class="chart" id="c-anual" role="img" aria-label="Colunas com a média mensal movimentada em cada ano"></div>
+  </section>
+  <section class="chart-card chart-card--wide">
+    <header><h2>Sazonalidade</h2><p>Volume movimentado por mês e ano — quanto mais escuro, maior o volume. Considera todo o histórico (os filtros de sentido, modal e produto se aplicam).</p></header>
+    <div class="chart" id="c-sazonalidade" role="img" aria-label="Mapa de calor do volume movimentado por mês e ano"></div>
+  </section>
+</div>

@@ -1,0 +1,97 @@
+{% extends "website/base.html" %}
+{% load static site_tags %}
+{% block title %}Histórico de movimentação | Informações ANP | TECAB{% endblock %}
+{% block description %}Volumes mensais recebidos e entregues no Terminal TECAB, em Cabedelo/PB, por produto e modal de transporte, conforme a Resolução ANP nº 881/2022.{% endblock %}
+{% block og_title %}Histórico de movimentação | TECAB{% endblock %}
+{# Página ainda em validação: sem link no menu e fora dos buscadores (ver NAO_INDEXAR_PUBLICO em views_anp.py). #}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% static 'css/painel-anp.css' %}">{% endblock %}
+{% block body_class %}anp-page{% endblock %}
+
+{% block content %}
+{% url 'website:informacoes_anp' as url_anp %}
+{% include "website/includes/page_hero.html" with imagem='banner-tanques' titulo='Histórico de movimentação' subtitulo='Volumes mensais recebidos e entregues no terminal, em atendimento ao art. 26, III, d, da Resolução ANP nº 881/2022.' trilha_pai='Informações ANP' trilha_pai_url=url_anp trilha='Histórico de movimentação' compacto=True %}
+
+<div class="anp">
+  <div class="anp__container">
+    <section class="anp-status anp-status--publico" aria-label="Sobre esta publicação">
+      <div class="anp-status__item">
+        {% icon 'clock' %}
+        <div>
+          <p class="anp-status__label">Atualizado em</p>
+          <p class="anp-status__value">{{ atualizado_em|date:"d/m/Y"|default:"—" }}</p>
+          <p class="anp-status__note">Os dados de cada mês são publicados até o dia 15 do mês seguinte.</p>
+        </div>
+      </div>
+      <div class="anp-status__item">
+        {% icon 'chart' %}
+        <div>
+          <p class="anp-status__label">Período disponível</p>
+          <p class="anp-status__value">{% if primeiro_mes %}{{ primeiro_mes|date:"m/Y" }} a {{ ultimo_mes|date:"m/Y" }}{% else %}—{% endif %}</p>
+          <p class="anp-status__note">Volumes em m³ a 20 °C.</p>
+        </div>
+      </div>
+      <div class="anp-status__item">
+        {% icon 'tank' %}
+        <div>
+          <p class="anp-status__label">Instalação</p>
+          <p class="anp-status__value">{{ terminal.nome|title }}</p>
+          <p class="anp-status__note">Código ANP {{ terminal.codigo_anp }} · {{ terminal.municipio|title }}/{{ terminal.uf }}</p>
+        </div>
+      </div>
+      <div class="anp-status__item anp-status__item--downloads">
+        {% icon 'download' %}
+        <div>
+          <p class="anp-status__label">Baixar os dados</p>
+          <div class="anp-status__links">
+            <a class="btn btn--sm" href="{% url 'website:historico_movimentacao_xlsx' %}" download>{% icon 'sheet' %}Planilha (.xlsx)</a>
+            <a class="btn btn--sm btn--outline" href="{% url 'website:historico_movimentacao_csv' %}" download>CSV</a>
+          </div>
+          <p class="anp-status__note">No layout padronizado pela ANP.</p>
+        </div>
+      </div>
+    </section>
+
+    {% if not dados.linhas %}
+    <div class="alert alert--info">{% icon 'alert' %}<p>Os dados de movimentação ainda não foram publicados.</p></div>
+    {% else %}
+    <noscript><div class="alert alert--info"><p>Ative o JavaScript para ver os gráficos e a tabela, ou baixe a planilha completa acima.</p></div></noscript>
+    {% include "website/anp/includes/dashboard.html" %}
+    {% include "website/anp/includes/tabela.html" %}
+    {{ dados|json_script:"anp-dados" }}
+    {% endif %}
+
+    <section class="anp-section anp-glossario" aria-labelledby="glossario-titulo">
+      <h2 id="glossario-titulo">Sobre os dados</h2>
+      <p class="muted">Cada linha corresponde ao volume de um produto em um mês, por sentido, tipo de operação e modal de transporte, conforme o layout definido pela ANP.</p>
+      <dl class="glossario">
+        <div>
+          <dt>Sentido da operação</dt>
+          <dd>{% for codigo, nome in sentidos %}<span><strong>{{ codigo }}</strong> {{ nome }}</span>{% endfor %}</dd>
+        </div>
+        <div>
+          <dt>Tipo da operação</dt>
+          <dd>{% for codigo, nome in tipos %}<span><strong>{{ codigo }}</strong> {{ nome }}</span>{% endfor %}</dd>
+        </div>
+        <div>
+          <dt>Modal de transporte</dt>
+          <dd>{% for codigo, nome in modos %}<span><strong>{{ codigo }}</strong> {{ nome }}</span>{% endfor %}</dd>
+        </div>
+        <div>
+          <dt>Volume</dt>
+          <dd><span>Metros cúbicos (m³) convertidos a 20 °C.</span></dd>
+        </div>
+      </dl>
+      <p class="muted mt-0">Dúvidas? Fale com a equipe comercial pelo e-mail <a href="mailto:{{ empresa.emails.0.email }}">{{ empresa.emails.0.email }}</a> ou pelo <a href="{% url 'website:contato' %}">formulário de contato</a>.</p>
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if dados.linhas %}
+<script src="{% static 'vendor/echarts/echarts.min.js' %}"></script>
+<script src="{% static 'vendor/echarts/langPT-br.js' %}"></script>
+<script src="{% static 'js/painel-anp.js' %}"></script>
+{% endif %}
+{% endblock %}

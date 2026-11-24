@@ -1,0 +1,17 @@
+{% load site_tags %}<tr data-row{% if form.errors %} class="is-invalid"{% endif %}>
+  {% for field in form.visible_fields %}{% if field.name != 'DELETE' %}
+  <td{% if field.name == 'volume_m3' %} class="num"{% endif %}>
+    {{ field }}
+    {% for error in field.errors %}<p class="field__error">{% icon 'alert' %}{{ error }}</p>{% endfor %}
+  </td>
+  {% endif %}{% endfor %}
+  <td class="lanc__del">
+    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+    {% if form.instance.pk %}
+    <label class="check" title="Excluir esta linha ao salvar">{{ form.DELETE }}<span>Excluir</span></label>
+    {% else %}
+    <span hidden>{{ form.DELETE }}</span>
+    <button type="button" class="btn btn--sm btn--ghost" data-remove-row aria-label="Remover linha">{% icon 'close' %}</button>
+    {% endif %}
+  </td>
+</tr>
