@@ -8,43 +8,7 @@
 {% block content %}
 {% include "website/includes/page_hero.html" with imagem='banner-porto' titulo='Contato' subtitulo='Fale com a nossa equipe ou envie seu currículo para fazer parte do TECAB.' %}
 
-<section class="section" aria-labelledby="canais-titulo">
-  <div class="container">
-    <h2 id="canais-titulo" class="visually-hidden">Canais de atendimento</h2>
-    <div class="grid grid--3">
-      <article class="card contact-card reveal">
-        <h3>{% icon 'phone' %}Telefones</h3>
-        <ul class="phone-list">
-          {% for t in empresa.telefones %}
-          <li><span>{{ t.setor }}</span><div>{% for numero, tel in t.numeros %}<a href="tel:{{ tel }}">{{ numero }}</a>{% if not forloop.last %} · {% endif %}{% endfor %}</div></li>
-          {% endfor %}
-        </ul>
-      </article>
-      <article class="card contact-card reveal">
-        <h3>{% icon 'mail' %}E-mails</h3>
-        <ul class="phone-list">
-          {% for e in empresa.emails %}<li><span>{{ e.rotulo }}</span><a href="mailto:{{ e.email }}">{{ e.email }}</a></li>{% endfor %}
-        </ul>
-        <h3 class="mt-2">{% icon 'clock' %}Horário de funcionamento</h3>
-        <ul class="phone-list">
-          {% for h in empresa.horarios %}<li><span>{{ h.setor }}</span><div>{% for p in h.periodos %}{{ p }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</div></li>{% endfor %}
-        </ul>
-      </article>
-      <article class="card contact-card reveal">
-        <h3>{% icon 'pin' %}Endereço</h3>
-        <address style="font-style:normal">
-          <strong>{{ empresa.razao_social }}</strong><br>
-          {{ empresa.endereco.logradouro }}<br>
-          {{ empresa.endereco.bairro }} – {{ empresa.endereco.cidade }}/{{ empresa.endereco.uf }}<br>
-          CEP {{ empresa.endereco.cep }}
-        </address>
-        <p class="mt-2" style="margin-bottom:0"><a class="btn btn--outline btn--sm" href="{{ empresa.mapa_url }}" target="_blank" rel="noopener">{% icon 'map' %}Como chegar<span class="visually-hidden"> (abre o Google Maps em nova aba)</span></a></p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section class="section section--soft" id="formularios" aria-labelledby="form-titulo">
+<section class="section" id="formularios" aria-labelledby="form-titulo">
   <div class="container--narrow">
     <div class="section-head section-head--center reveal">
       <p class="eyebrow">Formulários</p>
@@ -104,6 +68,42 @@
         </form>
         {% endwith %}
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--soft" aria-labelledby="canais-titulo">
+  <div class="container">
+    <h2 id="canais-titulo" class="visually-hidden">Canais de atendimento</h2>
+    <div class="grid grid--3">
+      <article class="card contact-card reveal">
+        <h3>{% icon 'phone' %}Telefones</h3>
+        <ul class="phone-list">
+          {% for t in empresa.telefones %}
+          <li><span>{{ t.setor }}</span><div>{% for numero, tel in t.numeros %}<a href="tel:{{ tel }}">{{ numero }}</a>{% if not forloop.last %} · {% endif %}{% endfor %}</div></li>
+          {% endfor %}
+        </ul>
+      </article>
+      <article class="card contact-card reveal">
+        <h3>{% icon 'mail' %}E-mails</h3>
+        <ul class="phone-list">
+          {% for e in empresa.emails %}<li><span>{{ e.rotulo }}</span><a href="mailto:{{ e.email }}">{{ e.email }}</a></li>{% endfor %}
+        </ul>
+        <h3 class="mt-2">{% icon 'clock' %}Horário de funcionamento</h3>
+        <ul class="phone-list">
+          {% for h in empresa.horarios %}<li><span>{{ h.setor }}</span><div>{% for p in h.periodos %}{{ p }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</div></li>{% endfor %}
+        </ul>
+      </article>
+      <article class="card contact-card reveal">
+        <h3>{% icon 'pin' %}Endereço</h3>
+        <address style="font-style:normal">
+          <strong>{{ empresa.razao_social }}</strong><br>
+          {{ empresa.endereco.logradouro }}<br>
+          {{ empresa.endereco.bairro }} – {{ empresa.endereco.cidade }}/{{ empresa.endereco.uf }}<br>
+          CEP {{ empresa.endereco.cep }}
+        </address>
+        <p class="mt-2" style="margin-bottom:0"><a class="btn btn--outline btn--sm" href="{{ empresa.mapa_url }}" target="_blank" rel="noopener">{% icon 'map' %}Como chegar<span class="visually-hidden"> (abre o Google Maps em nova aba)</span></a></p>
+      </article>
     </div>
   </div>
 </section>
