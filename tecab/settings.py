@@ -132,7 +132,9 @@ EMAIL_HOST = os.environ.get('DJANGO_EMAIL_HOST', 'localhost')
 EMAIL_PORT = int(os.environ.get('DJANGO_EMAIL_PORT', '25'))
 EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD', '')
-EMAIL_USE_TLS = os.environ.get('DJANGO_EMAIL_USE_TLS', '0') == '1'
+EMAIL_USE_TLS = os.environ.get('DJANGO_EMAIL_USE_TLS', '0') == '1'  # STARTTLS (porta 587)
+EMAIL_USE_SSL = os.environ.get('DJANGO_EMAIL_USE_SSL', '0') == '1'  # SSL direto (porta 465); não combine com TLS
+EMAIL_TIMEOUT = int(os.environ.get('DJANGO_EMAIL_TIMEOUT', '20'))
 DEFAULT_FROM_EMAIL = os.environ.get('DJANGO_DEFAULT_FROM_EMAIL', 'TECAB <no-reply@tecab.srv.br>')
 
 # Destinatários dos formulários: separa "Fale Conosco" de "Trabalhe Conosco".
