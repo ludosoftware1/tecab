@@ -39,7 +39,7 @@ EMPRESA = {
     'portal_cliente': [
         {'rotulo': 'Portal do Cliente', 'descricao': 'Acesso principal', 'url': 'https://autoload.tecab.srv.br/Portal/Portal/'},
         {'rotulo': 'Portal do Cliente (alternativo)', 'descricao': 'Use se o acesso principal estiver indisponível',
-         'url': 'http://187.19.198.158/Portal/Portal/'},
+         'url': 'http://128.201.185.254/Portal/Portal/'},
     ],
     'politica_privacidade': 'docs/politica-de-privacidade.docx',
 }
